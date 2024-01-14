@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center py-10">
+  <div class="text-center py-6">
     <h1 class="text-2xl font-bold text-gray-900">직접 만들어 나가는 슈링크플레이션 목록!</h1>
     <p class="mt-2 text-lg">다가온 인플레이션, 위시리스트와 함께 극복해나가요!</p>
     <div class="mt-3 flex items-center justify-center gap-x-4">
