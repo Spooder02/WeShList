@@ -1,6 +1,6 @@
 <template>
-<nav class="bg-gray-800 flex shadow-2xl mb-4">
-    <div class="w-full block flex-grow flex items-center justify-between">
+<nav class="bg-gray-800 block shadow-lg mb-4">
+    <!--  <div class="w-full block flex-grow flex items-center justify-between">
     <div id="right" class="flex flex-wrap items-center justify-between mt-2 mb-2">
       <img @click="$router.push('/')" src="@/assets/WeShList_MainLogo_cropped.png" class="apect-w-5 aspect-h-1 h-8 ml-1 mr-1">
       <a @click="$router.push('/')" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">메인</a>
@@ -13,6 +13,23 @@
       <p class="text-gray-500">|</p>
       <a class="text-white hover:bg-gray-700 hover:text-white rounded-md px-2 py-2">회원가입</a>
     </div>
+    </div> --> <!-- PC VIEW -->
+    <!-- MOBILE VIEW --> 
+    <div class="w-full block flex-grow flex items-center justify-between p-2">
+      <img @click="$router.push('/')" src="@/assets/WeShList_MainLogo_cropped.png" class="apect-w-5 aspect-h-1 h-8 ml-1 mr-1">
+        <button @click="toggleMenu()" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+        <svg v-if="!isOpen" class="block h-8 w-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+        <svg v-if="isOpen" class="block h-8 w-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div v-if="isOpen" class="w-full bg-gray-500 p-4 text-center text-white">
+      <a @click="$router.push('/')" class="block">메인</a>
+      <a @click="$router.push('/introduct')" class="block mt-2">소개</a>
+      <a @click="$router.push('/finditem')" class="block mt-2">아이템 찾기</a>
     </div>
 </nav>
 </template>
@@ -26,6 +43,18 @@ export default defineComponent({
   components: {
 
   },
+  data() {
+    return {
+      isOpen: false
+    }
+  },
+  methods: {
+    toggleMenu() {
+      setTimeout(() => {
+        this.isOpen = !this.isOpen;
+      }, 100);
+    }
+  }
   
 });
 </script>
