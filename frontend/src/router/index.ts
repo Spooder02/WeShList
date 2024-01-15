@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView
   },
   {
-    path: '/about',
+    path: '/introduct',
     name: 'about',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -19,25 +19,27 @@ const routes: Array<RouteRecordRaw> = [
     path: '/finditem',
     name: 'FindItem',
     component: () => import('@/views/FindItems.vue')
-  }
-  ,
+  },
   {
     path: '/detail',
     name: 'DetailView',
     component: () => import('@/views/ItemDetail.vue')
-  }
-  ,
+  },
   {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/Login.vue')
-  }
-  ,
+  },
   {
     path: '/signup',
     name: 'SignUp',
     component: () => import('@/views/SignUp.vue')
-  }
+  },
+  {
+    path: '/findaccount',
+    name: 'FindAccount',
+    component: () => import('@/views/FindAccount.vue')
+  },
 ]
 
 const router = createRouter({
