@@ -29,7 +29,10 @@
     <div v-if="isOpen" class="w-full bg-gray-500 p-4 text-center text-white">
       <a @click="$router.push('/')" class="block">메인</a>
       <a @click="$router.push('/introduct')" class="block mt-2">소개</a>
-      <a @click="$router.push('/finditem')" class="block mt-2">아이템 찾기</a>
+      <a @click="$router.push('/finditem')" class="block mt-2 mb-3">상품 찾기</a>
+      <a @click="$router.push('/login')" class="font-medium">로그인</a>
+      <span class="ml-1 mr-1">|</span>
+      <a @click="$router.push('/signup')" class="font-medium">회원가입</a>
     </div>
 </nav>
 </template>
