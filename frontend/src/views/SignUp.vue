@@ -2,11 +2,11 @@
     <div class="w-4/5 p-4 m-auto text-center rounded-md bg-gray-50">
         <p class="font-bold text-xl">회원가입</p>
         <div class="grid gap-y-4 mt-2">
-            <input type="text" class="border-b border-gray focus:border-blue-400" placeholder="아이디 / ID">
-            <input type="password" class="border-b border-gray focus:border-blue-400" placeholder="비밀번호 / PW">
-            <input type="password" class="border-b border-gray focus:border-blue-400" placeholder="비밀번호 확인 / PW Repeat">
-            <input type="text" class="border-b border-gray focus:border-blue-400" placeholder="이름">
-            <input type="tel" class="border-b border-gray focus:border-blue-400" placeholder="전화번호">
+            <input type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 pl-2 p-0.5" placeholder="아이디 / ID">
+            <input type="password" class="border rounded-lg border-gray-300 focus:border-blue-300 pl-2 p-0.5" placeholder="비밀번호 / PW">
+            <input type="password" class="border rounded-lg border-gray-300 focus:border-blue-300 pl-2 p-0.5" placeholder="비밀번호 확인 / PW Repeat">
+            <input type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 pl-2 p-0.5" placeholder="이름">
+            <input type="tel" class="border rounded-lg border-gray-300 focus:border-blue-300 pl-2 p-0.5" placeholder="전화번호">
             <span @click="toggleModal()" class="text-sm"><input type="checkbox" @click="isModalOpen != isModalOpen"> [필수] 개인정보 수집 동의</span>
             <button class="w-3/4 p-2 bg-blue-500 text-white font-semibold rounded-md content-center justify-self-center">회원가입하기</button>
         </div>

@@ -40,6 +40,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'FindAccount',
     component: () => import('@/views/FindAccount.vue')
   },
+  {
+    path: '/additem',
+    name: 'AddItem',
+    component: () => import('@/views/AddItem.vue')
+  },
 ]
 
 const router = createRouter({
