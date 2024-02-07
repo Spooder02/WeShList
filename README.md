@@ -1,3 +1,6 @@
+# 사이트 외관 (지속적 업데이트 예정)
+![Screenshot_20240207_174802-imageonline co-merged](https://github.com/Spooder02/WeShList/assets/66957506/de23345c-0f91-48f8-81b8-e283d6dc9563)
+
 # 문제 제기/프로젝트의 필요성
 ![image](https://github.com/Spooder02/WeShList/assets/66957506/b0ccdf3a-43ba-4be6-8ae2-e9c2e6fc7bd1)
 - 출처: (https://www.bbc.com/korean/articles/c88e39zz67vo)
