@@ -37,6 +37,9 @@ public class ProductService {
                 e.printStackTrace();
             }
         }
+        if (product.getUploader() == null) {
+            product.setUploader("익명");
+        }
         return productRepository.save(product);
     }
 

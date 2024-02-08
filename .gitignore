@@ -2,3 +2,4 @@
 /.vscode
 /backend/src/main/resources/application.properties
 /backend/build/resources/main/application.properties
+/backend/src/main/resources/uploads/image
