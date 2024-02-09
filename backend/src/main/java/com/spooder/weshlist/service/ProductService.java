@@ -61,6 +61,6 @@ public class ProductService {
     }
 
     private void saveImageFile(MultipartFile imageFile, String filename) throws IOException {
-        Files.copy(imageFile.getInputStream(), Paths.get("backend/src/main/resources/uploads/image/", filename), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(imageFile.getInputStream(), Paths.get("backend/src/main/resources/static/image/", filename), StandardCopyOption.REPLACE_EXISTING);
     }
 }

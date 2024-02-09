@@ -1,6 +1,9 @@
 package com.spooder.weshlist.controller;
 
 import java.util.List;
+import java.io.*;
+
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spooder.weshlist.Model.Product;
 import com.spooder.weshlist.service.ProductService;
 
+import jakarta.servlet.*;
+
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -38,14 +44,10 @@ public class ProductController {
         Product savedProduct = productService.addProduct(product, imageFile);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
+
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
-    }
-    
-    @GetMapping("/{product_id}")
-    public Product getProductById(@PathVariable Long product_id) {
-        return productService.getProductById(product_id);
     }
     
     @PutMapping("/{product_id}")

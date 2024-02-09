@@ -1,13 +1,13 @@
 <template>
     <div @click="$router.push('/detail')" class="m-4 rounded-xl shadow-lg">
         <div class="h-32">
-            <img class="w-32 absolute" src="@/assets/unavailable_image.png">
+            <img class="w-32 absolute" :src="'http://localhost:8081/image/'+image">
             <div id="inline-block">
-                <p class="inline ml-32 mt-2 text-lg">상품명</p>
-                <p class="inline ml-1 text-sm text-gray-500">카테고리</p>
+                <p class="inline ml-32 mt-2 text-lg">{{ name }}</p>
+                <p class="inline ml-1 text-sm text-gray-500">{{ category }}</p>
             </div>
-            <p class="ml-32 text-md text-gray-500">상품 설명</p>
-            <p class="mr-4 mt-11 text-right text-sm text-gray-300">등록 날짜: YY-MM-DD | HH:MM</p>
+            <p class="ml-32 text-md text-gray-500">{{ description }}</p>
+            <p class="mr-4 mt-11 text-right text-sm text-gray-300">등록 날짜: {{ update_time }}</p>
         </div>
     </div>
 </template>
@@ -21,5 +21,12 @@ export default defineComponent({
     components: {
         
     },
+    props: {
+        name: String,
+        category: String,
+        description: String,
+        update_time: String,
+        image: String
+    }
 });
 </script>
