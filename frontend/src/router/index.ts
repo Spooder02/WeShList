@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/FindItems.vue')
   },
   {
-    path: '/detail',
+    path: '/finditem/detail',
     name: 'DetailView',
     component: () => import('@/views/ItemDetail.vue')
   },

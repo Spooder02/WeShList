@@ -6,11 +6,12 @@
     </header>
     <ItemCard
     v-for="data in itemInfo"
-    :ref="data.id"
+    :ref="data.product_id"
+    :id="data.product_id"
     :name="data.name"
     :image="data.image_name"
     :category="data.category"
-    :description="data.description"
+    :description="data.detail"
     :update_time="data.uploaded_date"
     />
 </template>
