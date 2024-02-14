@@ -1,10 +1,12 @@
 <template>
     <div class="w-4/5 bg-gray-50 m-auto shadow-lg text-center grid place-content-center">
         <p class="font-semibold">상품 제보하기</p>
-        <label for="file" class="p-8 m-auto border font-medium rounded-lg mt-4 mb-4">
+        <label v-if="!image_url" for="file" class="p-8 m-auto border font-medium rounded-lg mt-4 mb-4">
         <span class="font-black">+</span>
             이미지 등록
         </label>
+        <img v-if="image_url" class="w-64 p-8 m-auto border rounded-lg mt-4 mb-4" :src="image_url">
+        <button v-if="image_url" @click="resetImage()" class="w-1/2 mb-2 p-0.5 m-auto rounded-lg bg-red-400 text-white font-medium shadow-xl">이미지 초기화</button>
         <input @change="uploadImage($event)" id="file" type="file" class="hidden" accept="image/*"/>
         <input v-model="name" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="상품명">
         <input v-model="brand" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="브랜드">
@@ -58,6 +60,7 @@ export default defineComponent({
             brand: null,
             price: null,
             category: null,
+            image_url: '',
         }
     },
     methods: {
@@ -98,7 +101,7 @@ export default defineComponent({
         uploadImage(event: { target: HTMLInputElement }) {
             if (this.formData.has("imageFile")) this.formData.set("imageFile", event.target.files![0]);
             else this.formData.append("imageFile", event.target.files![0]); // 있다면 교체, 없다면 추가
-            console.log(this.formData)
+            this.image_url = URL.createObjectURL(event.target.files![0]);
         },
         addItem() {
             if (this.name != null &&
@@ -135,6 +138,9 @@ export default defineComponent({
             } else {
                 alert("[에러] 상품 정보를 모두 입력해주세요!");
             }
+        },
+        resetImage() {
+            this.image_url = '';
         }
     },
     mounted() {
