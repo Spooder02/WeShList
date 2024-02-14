@@ -18,7 +18,6 @@ import com.spooder.weshlist.repository.ProductRepository;
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
-
     
     public Product addProduct(Product product, MultipartFile imageFile) {
         product.setUploaded_date(new Date());
