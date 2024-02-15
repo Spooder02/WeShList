@@ -30,14 +30,21 @@
       <a @click="$router.push('/')" class="block">메인</a>
       <a @click="$router.push('/introduct')" class="block mt-2">소개</a>
       <a @click="$router.push('/finditem')" class="block mt-2 mb-3">상품 찾기</a>
-      <a @click="$router.push('/login')" class="font-medium">로그인</a>
-      <span class="ml-1 mr-1">|</span>
-      <a @click="$router.push('/signup')" class="font-medium">회원가입</a>
+      <div v-if="!isLoggedin">
+        <a @click="$router.push('/login')" class="font-medium">로그인</a>
+        <span class="ml-1 mr-1">|</span>
+        <a @click="$router.push('/signup')" class="font-medium">회원가입</a>
+      </div>
+      <div v-if="isLoggedin">
+        <span>반갑습니다, {{ username }}님!</span>
+        <a class="block" @click="logout()">로그아웃</a>
+      </div>
     </div>
 </nav>
 </template>
 
 <script lang="ts">
+import axios from 'axios';
 import '../index.css';
 import { defineComponent } from 'vue';
 
@@ -46,9 +53,17 @@ export default defineComponent({
   components: {
 
   },
+  mounted() {
+    this.checkLogin()
+  },
+  updated() {
+    this.checkLogin()
+  },
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      isLoggedin: false,
+      username: ''
     }
   },
   methods: {
@@ -56,8 +71,44 @@ export default defineComponent({
       setTimeout(() => {
         this.isOpen = !this.isOpen;
       }, 100);
+    },
+    logout() {
+      axios.post(process.env.VUE_APP_BACKEND_ADDRESS+"/auth/logout", {}, { headers: {
+        Authorization: sessionStorage.getItem("Authorization")
+      }})
+      .then(res => {
+        this.isLoggedin = false;
+        this.username = '';
+        sessionStorage.removeItem("Authorization")
+      })
+      .catch(e => { console.log(e); })
+    },
+    refresh() {
+      this.$forceUpdate();
+    },
+    checkLogin() {
+      const token = sessionStorage.getItem("Authorization");
+      if (token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const decodedJWT = JSON.parse(
+        decodeURIComponent(
+          window
+            .atob(base64)
+            .split('')
+            .map(function (c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+          )
+        );
+        this.username = decodedJWT.sub
+        this.isLoggedin = true;
+      }
+      else this.isLoggedin = false;
     }
-  }
+  },
   
+
 });
 </script>

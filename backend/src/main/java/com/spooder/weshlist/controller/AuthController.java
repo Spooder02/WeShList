@@ -47,6 +47,7 @@ public class AuthController {
         return new ResponseEntity<>("Successfully Deleted", HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "*", exposedHeaders = "Authorization")
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto request) {
         if (authService.Login(request)) {
@@ -58,6 +59,7 @@ public class AuthController {
         }
     }
 
+    @CrossOrigin(origins = "*", exposedHeaders = "Authorization")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");

@@ -24,6 +24,7 @@ public class JwtProvider {
 
     public String createToken(String id, String nickname) {
         Map<String, Object> claims = new HashMap<>();
+        
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(nickname)

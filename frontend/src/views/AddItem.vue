@@ -124,9 +124,8 @@ export default defineComponent({
                         this.formData.append(`detail[${i}].before_detail`, this.input[i].before_value.toString());
                         this.formData.append(`detail[${i}].after_detail`, this.input[i].changed_value.toString());
                         this.formData.append(`detail[${i}].unit`, this.input[i].unit);
-                        console.log(this.formData);
                     }
-                    axios.post('http://localhost:8081/product', this.formData,
+                    axios.post(process.env.VUE_APP_BACKEND_ADDRESS+'/product', this.formData,
                     { headers: { 'Content-Type': 'multipart/form-data', 'Access-Control-Allow-Origin': '*'}})
                     .then(() => {
                         alert("등록이 완료되었습니다!");

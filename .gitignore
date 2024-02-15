@@ -5,3 +5,4 @@
 /backend/src/main/resources/static/image
 /backend/.gradle/
 /backend/build/
+/frontend/.env

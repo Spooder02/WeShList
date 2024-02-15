@@ -27,3 +27,18 @@ export interface productDetail {
     after_detail: number;
     unit: String;
 }
+
+export interface signupData {
+    id: String;
+    email: String;
+    password: String;
+    repeat_password: String;
+    name: String;
+    nickname: String;
+    tel: String;
+}
+
+export interface loginData {
+    id: String;
+    password: String;
+}

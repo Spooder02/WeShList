@@ -3,6 +3,7 @@ package com.spooder.weshlist.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.spooder.dto.LoginDto;
 import com.spooder.weshlist.Model.User;
@@ -17,12 +18,14 @@ public class AuthService {
     public User addUser(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        user.setActivated(true);
+        user.setRole("user");
         return userRepository.save(user);
     }
 
     public boolean Login(LoginDto userdata) {
         User user = userRepository.findByID(userdata.getId());
-        if (user != null) {
+        if (user != null && user.isActivated()) {
             return (passwordEncoder.matches(userdata.getPassword(), user.getPassword())? true : false);
         } else {
             return false;
