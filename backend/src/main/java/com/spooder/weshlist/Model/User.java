@@ -1,5 +1,7 @@
 package com.spooder.weshlist.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -36,4 +38,11 @@ public class User {
 
     @Column(nullable = false)
     private int point;
+
+    @Column
+    @JsonIgnore
+    private boolean activated;
+
+    @Column
+    private String role;
 }
