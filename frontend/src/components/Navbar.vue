@@ -27,17 +27,18 @@
       </button>
     </div>
     <div v-if="isOpen" class="w-full bg-gray-500 p-4 text-center text-white">
+      <div v-if="isLoggedin" class="mb-2">
+        <span class="font-semibold">반갑습니다, {{ username }}님!</span>
+        <a class="ml-4" @click="logout()">로그아웃</a>
+      </div>
       <a @click="$router.push('/')" class="block">메인</a>
       <a @click="$router.push('/introduct')" class="block mt-2">소개</a>
-      <a @click="$router.push('/finditem')" class="block mt-2 mb-3">상품 찾기</a>
-      <div v-if="!isLoggedin">
+      <a @click="$router.push('/finditem')" class="block mt-2">상품 찾기</a>
+      <a @click="$router.push('/additem')" class="block mt-2">상품 제보</a>
+      <div v-if="!isLoggedin" class="mt-3">
         <a @click="$router.push('/login')" class="font-medium">로그인</a>
         <span class="ml-1 mr-1">|</span>
         <a @click="$router.push('/signup')" class="font-medium">회원가입</a>
-      </div>
-      <div v-if="isLoggedin">
-        <span>반갑습니다, {{ username }}님!</span>
-        <a class="block" @click="logout()">로그아웃</a>
       </div>
     </div>
 </nav>

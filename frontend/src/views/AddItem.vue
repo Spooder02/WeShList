@@ -1,5 +1,5 @@
 <template>
-    <div class="w-4/5 bg-gray-50 m-auto shadow-lg text-center grid place-content-center">
+    <div class="w-4/5 bg-gray-50 m-auto p-2 shadow-lg text-center grid place-content-center">
         <p class="font-semibold">상품 제보하기</p>
         <label v-if="!image_url" for="file" class="p-8 m-auto border font-medium rounded-lg mt-4 mb-4">
         <span class="font-black">+</span>
