@@ -35,12 +35,12 @@ export default defineComponent({
                     "password": this.loginData.password
                 })
                 .then(res => {
-                    sessionStorage.setItem("Authorization", res.headers.authorization)
-                    this.$forceUpdate();
-                    setTimeout(() => {
-                        this.$router.push("/");
-                    }, 100);
-                    
+                    sessionStorage.setItem("Authorization", res.headers.authorization);
+                    this.$router.push('/');
+                    this.$nextTick(async () => {
+                        await new Promise((resolve) => setTimeout(resolve, 0));
+                        window.location.reload();
+                    });
                 })
                 .catch(e => { alert("로그인에 실패했습니다!") })
             }

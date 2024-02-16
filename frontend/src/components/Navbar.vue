@@ -73,15 +73,9 @@ export default defineComponent({
       }, 100);
     },
     logout() {
-      axios.post(process.env.VUE_APP_BACKEND_ADDRESS+"/auth/logout", {}, { headers: {
-        Authorization: sessionStorage.getItem("Authorization")
-      }})
-      .then(res => {
-        this.isLoggedin = false;
-        this.username = '';
-        sessionStorage.removeItem("Authorization")
-      })
-      .catch(e => { console.log(e); })
+      this.isLoggedin = false;
+      this.username = '';
+      sessionStorage.removeItem("Authorization")
     },
     refresh() {
       this.$forceUpdate();
