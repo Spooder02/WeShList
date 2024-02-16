@@ -10,6 +10,7 @@ export interface product {
     image_name: String;
     name: String;
     price: number;
+    brand: String;
     category: String;
     detail: productDetail;
     uploader: String;

@@ -1,7 +1,8 @@
 <template>
     <div class="m-4 p-2 rounded-xl shadow-lg">
         <div class="">
-            <img class="max-w-full" :src="'http://localhost:8081/image/'+productData?.image_name">
+            <img v-if="productData?.image_name" class="max-w-full" :src="'http://localhost:8081/image/'+productData?.image_name">
+            <img v-if="!productData?.image_name" class="w-full" src="@/assets/unavailable_image.png">
             <div class="ml-4">
                 <div id="inline-block">
                 <p class="inline mt-2 text-lg">{{ productData?.name }}</p>

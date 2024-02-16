@@ -45,6 +45,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'AddItem',
     component: () => import('@/views/AddItem.vue')
   },
+  {
+    path: '/fixitem',
+    name: 'FixItem',
+    component: () => import('@/views/FixItem.vue')
+  },
 ]
 
 const router = createRouter({
