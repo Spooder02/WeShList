@@ -1,11 +1,11 @@
 <template>
     <div class="w-4/5 bg-gray-50 m-auto p-2 shadow-lg text-center grid place-content-center">
         <p class="font-semibold">상품 수정하기</p>
-        <label v-if="!image_url" for="file" class="p-8 m-auto border font-medium rounded-lg mt-4 mb-4">
+        <label v-if="image_url === ''" for="file" class="p-8 m-auto border font-medium rounded-lg mt-4 mb-4">
         <span class="font-black">+</span>
             이미지 등록
         </label>
-        <img v-if="image_url" class="w-64 p-8 m-auto border rounded-lg mt-4 mb-4" :src="image_url">
+        <img v-if="image_url != ''" class="w-64 p-8 m-auto border rounded-lg mt-4 mb-4" :src="image_url">
         <button v-if="image_url" @click="resetImage()" class="w-1/2 mb-2 p-0.5 m-auto rounded-lg bg-red-400 text-white font-medium shadow-xl">이미지 초기화</button>
         <input @change="uploadImage($event)" id="file" type="file" class="hidden" accept="image/*"/>
         <input v-model="name" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="상품명">
@@ -145,7 +145,7 @@ export default defineComponent({
     },
     async created() {
         let response: product = (await axios.get<product>('http://localhost:8081/product/'+useRoute().query.id)).data;
-        this.image_url = process.env.VUE_APP_BACKEND_ADDRESS+"/image/"+response.image_name;
+        this.image_url = response.image_name? process.env.VUE_APP_BACKEND_ADDRESS+"/image/"+response.image_name: '';
         this.name = response.name;
         this.brand = response.brand;
         this.price = Number(response.price);
