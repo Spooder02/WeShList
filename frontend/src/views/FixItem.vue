@@ -57,10 +57,10 @@ export default defineComponent({
             unit: ['g'],
             input: [] as Array<changed_value>,
             formData: new FormData(),
-            name: null,
-            brand: null,
-            price: null,
-            category: null,
+            name: '',
+            brand: '',
+            price: 0,
+            category: '',
             image_url: '',
         }
     },
@@ -109,7 +109,7 @@ export default defineComponent({
             this.brand != null &&
             this.price != null) {
                 this.formData.append('name', this.name);
-                this.formData.append('price', this.price);
+                this.formData.append('price', this.price.toString());
                 this.formData.append('brand', this.brand);
                 this.formData.append('category', this.category!);
                 let i;
@@ -144,12 +144,11 @@ export default defineComponent({
         }
     },
     async created() {
-        let response = await axios.get<product>('http://localhost:8081/product/'+useRoute().query.id);
-        response = response.data;
+        let response: product = (await axios.get<product>('http://localhost:8081/product/'+useRoute().query.id)).data;
         this.image_url = process.env.VUE_APP_BACKEND_ADDRESS+"/image/"+response.image_name;
         this.name = response.name;
         this.brand = response.brand;
-        this.price = response.price;
+        this.price = Number(response.price);
         this.category = response.category;
         this.changes = response.detail.length;
         for (let i = 0; i < response.detail.length; i++) {

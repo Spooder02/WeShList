@@ -7,15 +7,15 @@ export interface changed_value {
 
 export interface product {
     product_id: number;
-    image_name: String;
-    name: String;
-    price: number;
-    brand: String;
-    category: String;
-    detail: productDetail;
-    uploader: String;
+    image_name: string;
+    name: string;
+    price: Number;
+    brand: string;
+    category: string;
+    detail: productDetail[];
+    uploader: string;
     uploaded_date: Date;
-    updator: String;
+    updator: string;
     updated_date: Date;
     positive_point: number;
     negative_point: number;
@@ -23,23 +23,23 @@ export interface product {
 
 export interface productDetail {
     product_detail_key: number;
-    changed_point: String;
+    changed_point: string;
     before_detail: number;
     after_detail: number;
-    unit: String;
+    unit: string;
 }
 
 export interface signupData {
-    id: String;
-    email: String;
-    password: String;
-    repeat_password: String;
-    name: String;
-    nickname: String;
-    tel: String;
+    id: string;
+    email: string;
+    password: string;
+    repeat_password: string;
+    name: string;
+    nickname: string;
+    tel: string;
 }
 
 export interface loginData {
-    id: String;
-    password: String;
+    id: string;
+    password: string;
 }
