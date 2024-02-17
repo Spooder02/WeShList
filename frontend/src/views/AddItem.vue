@@ -21,15 +21,16 @@
             <button @click="addChanges(i)" class="p-0.5 pl-1 pr-1 rounded-lg bg-green-400 text-white font-medium shadow-xl"><span class="font-black">+</span> 변화 추가</button>
             </p>
             <input @change="setValue(i, 1, $event.target.value)" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="변화 항목">
-            <input @change="setValue(i, 2, $event.target.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)">
-            <select @input="setValue(i, 3, $event.target.value)" v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" :key="i">
+            <input @change="setValue(i, 2, $event.target.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)" :disabled="unknown[i]">
+            <select @input="setValue(i, 3, $event.target.value)" v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" :key="i" :disabled="unknown[i]">
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
             <p>↓</p>
-            <input @change="setValue(i, 4, $event.target.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)">
+            <input @change="setValue(i, 4, $event.target.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)" :disabled="unknown[i]">
             <select v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit" disabled>
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
+            <label class="block text-right mr-2 mb-0.5"><input type="checkbox" class="mr-1" v-model="unknown">변경 양을 몰라요</label>
         </div>
         <button @click="addItem();" class="p-2 mt-2 mb-2 bg-blue-400 w-1/2 m-auto rounded-lg text-white font-semibold shadow-xl">+ 상품 등록하기</button>
     </div>
@@ -61,6 +62,7 @@ export default defineComponent({
             price: null,
             category: null,
             image_url: '',
+            unknown: [ false ]
         }
     },
     methods: {
@@ -83,17 +85,17 @@ export default defineComponent({
                     if (isNaN(Number(value)))
                         alert("숫자만 입력해주세요!");
                     else
-                        this.input[n-1].changed_value = Number(value);
+                        this.input[n-1].after_value = Number(value);
             }
         },
         addChanges(i:number) {
-            if (this.input[i-1].changed_point != '' &&
+            if ((this.input[i-1].changed_point != '' &&
                 this.input[i-1].before_value != 0 &&
-                this.input[i-1].changed_value != 0) { // 값 무결성 체크
+                this.input[i-1].after_value != 0) || 
+                (this.input[i-1].changed_point != '' && this.unknown[i])) { // 값 무결성 체크
             this.changes+=1;
             this.unit[i]='g';
-            console.log(this.input[i-1]);
-            this.input.push({changed_point: '', before_value: 0, unit: 'g', changed_value: 0});
+            this.input.push({changed_point: '', before_value: null, unit: 'g', after_value: null, unknown: false});
             } else {
                 alert("값을 모두 입력 후 추가해주세요!")
             }
@@ -103,7 +105,7 @@ export default defineComponent({
             else this.formData.append("imageFile", event.target.files![0]); // 있다면 교체, 없다면 추가
             this.image_url = URL.createObjectURL(event.target.files![0]);
         },
-        addItem() {
+        addItem() { // TODO : 폼 데이터 중복 append 방지
             if (this.name != null &&
             this.brand != null &&
             this.price != null) {
@@ -114,16 +116,23 @@ export default defineComponent({
                 let i;
                 for (i = 0; i < this.changes; i++) { // 디테일값 무결성 체크
                     if (this.input[i].changed_point != '' &&
-                this.input[i].before_value != 0 &&
-                this.input[i].changed_value != 0) continue;
+                        this.input[i].before_value != 0 &&
+                        this.input[i].after_value != 0) continue;
+                    else if (this.input[i].changed_point != '' && this.unknown[i]) // 모르는 경우도 OK
+                        continue;
                     else break;
                 }
                 if (i == this.changes) { // 체크 이후 폼 데이터 작성
                     for (i = 0; i < this.changes; i++) {
-                        this.formData.append(`detail[${i}].changed_point`, this.input[i].changed_point);
-                        this.formData.append(`detail[${i}].before_detail`, this.input[i].before_value.toString());
-                        this.formData.append(`detail[${i}].after_detail`, this.input[i].changed_value.toString());
-                        this.formData.append(`detail[${i}].unit`, this.input[i].unit);
+                        if (this.unknown[i]) {
+                            this.formData.append(`detail[${i}].changed_point`, this.input[i].changed_point);
+                            this.formData.append(`detail[${i}].unknown`, JSON.stringify(this.unknown[i]));
+                        } else {
+                            this.formData.append(`detail[${i}].changed_point`, this.input[i].changed_point);
+                            this.formData.append(`detail[${i}].before_value`, this.input[i].before_value?.toString() ?? '');
+                            this.formData.append(`detail[${i}].after_value`, this.input[i].after_value?.toString() ?? '');
+                            this.formData.append(`detail[${i}].unit`, this.input[i].unit ?? '');
+                        }
                     }
                     axios.post(process.env.VUE_APP_BACKEND_ADDRESS+'/product', this.formData,
                     { headers: { 'Content-Type': 'multipart/form-data', 'Access-Control-Allow-Origin': '*'}})
@@ -143,7 +152,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.input.push({changed_point: '', before_value: 0, unit: 'g', changed_value: 0}) // 최초 변화 Array 생성
+        this.input.push({changed_point: '', before_value: null, unit: 'g', after_value: null, unknown: false}); // 최초 변화 Array 생성
     }
 });
 </script>

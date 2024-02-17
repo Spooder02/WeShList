@@ -1,8 +1,9 @@
 export interface changed_value {
     changed_point: string;
-    before_value: number;
-    unit: string;
-    changed_value: number;
+    before_value: number | null;
+    after_value: number | null;
+    unit: string | null;
+    unknown: boolean;
 }
 
 export interface product {
@@ -24,9 +25,10 @@ export interface product {
 export interface productDetail {
     product_detail_key: number;
     changed_point: string;
-    before_detail: number;
-    after_detail: number;
-    unit: string;
+    before_value: number | null;
+    after_value: number | null;
+    unit: string | null;
+    unknown: boolean;
 }
 
 export interface signupData {

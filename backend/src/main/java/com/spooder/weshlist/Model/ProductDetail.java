@@ -30,12 +30,21 @@ public class ProductDetail {
     @Column(nullable = false)
     private String changed_point;
 
-    @Column(nullable = false)
-    private float before_detail;
+    @Column
+    private Float before_value;
 
-    @Column(nullable = false)
-    private float after_detail;
+    @Column
+    private Float after_value;
 
-    @Column(nullable = false)
+    @Column
     private String unit;
+
+    @Column(nullable = false)
+    private boolean unknown;
+
+    public void setDetailsNull() {
+        this.before_value = null;
+        this.after_value = null;
+        this.unit = null;
+    }
 }

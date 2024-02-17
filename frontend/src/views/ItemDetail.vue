@@ -11,7 +11,7 @@
                 <div class="m-0 p-1 rounded-xl shadow-lg">
                     <p class="text-md text-black-500 text-center">변화:</p>
                     <p v-for="detail in productData?.detail" class="text-lg text-black-500 text-center">
-                        {{ detail.changed_point }}({{ detail.before_detail }}{{ detail.unit }} -> {{ detail.after_detail }}{{ detail.unit }})
+                        {{ detail.changed_point }}({{ detail.before_value }}{{ detail.unit }} -> {{ detail.after_value }}{{ detail.unit }})
                     </p>
                 </div>
                 <div class="text-center mt-4">

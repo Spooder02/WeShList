@@ -7,7 +7,7 @@
                 <p class="inline ml-24 pl-2 mt-2 text-lg">{{ name }}</p>
                 <p class="inline ml-1 text-sm text-gray-500">{{ category }}</p>
             </div>
-            <p class="ml-24 m-0 pl-2 text-sm text-gray-500">{{ description[0].changed_point }} {{ description[0].before_detail}}{{ description[0].unit }} -> {{ description[0].after_detail }}{{ description[0].unit }}<br class="m-0">...</p>
+            <p class="ml-24 m-0 pl-2 text-sm text-gray-500">{{ description[0].changed_point }} {{ description[0].before_value }}{{ description[0].unit }} -> {{ description[0].after_value }}{{ description[0].unit }}<br class="m-0">...</p>
             <p class="mr-3 mt-1 text-right text-xs text-gray-300">등록 날짜: {{ update_time }}</p>
         </div>
     </div>
@@ -26,7 +26,7 @@ export default defineComponent({
         id: Number,
         name: String,
         category: String,
-        description: Object,
+        description: Array,
         update_time: String,
         image: String,
     }

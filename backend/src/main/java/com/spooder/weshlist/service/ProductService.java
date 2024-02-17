@@ -24,6 +24,9 @@ public class ProductService {
         product.setUpdated_date(new Date());
         for (ProductDetail productDetail : product.getDetail()) {
             productDetail.setProduct(product);
+            if (productDetail.isUnknown())
+                productDetail.setDetailsNull();
+            else productDetail.setUnknown(false);
         }
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
@@ -39,6 +42,7 @@ public class ProductService {
         if (product.getUploader() == null) {
             product.setUploader("익명");
         }
+        
         return productRepository.save(product);
     }
 

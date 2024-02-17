@@ -26,7 +26,7 @@
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
             <p>↓</p>
-            <input @change="setValue(i, 4, $event.target.value)" :value="input[i-1]?.changed_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)">
+            <input @change="setValue(i, 4, $event.target.value)" :value="input[i-1]?.after_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)">
             <select v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit" disabled>
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
@@ -38,7 +38,7 @@
 <script lang="ts">
 import axios from 'axios';
 import '../index.css'
-import { changed_value, product } from '../datatype'
+import { changed_value, product, productDetail } from '../datatype'
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -84,17 +84,17 @@ export default defineComponent({
                     if (isNaN(Number(value)))
                         alert("숫자만 입력해주세요!");
                     else
-                        this.input[n-1].changed_value = Number(value);
+                        this.input[n-1].after_value = Number(value);
             }
         },
         addChanges(i:number) {
             if (this.input[i-1].changed_point != '' &&
                 this.input[i-1].before_value != 0 &&
-                this.input[i-1].changed_value != 0) { // 값 무결성 체크
+                this.input[i-1].after_value != 0) { // 값 무결성 체크
             this.changes+=1;
             this.unit[i]='g';
             console.log(this.input[i-1]);
-            this.input.push({changed_point: '', before_value: 0, unit: 'g', changed_value: 0});
+            this.input.push({changed_point: '', before_value: null, unit: null, after_value: null, unknown: false});
             } else {
                 alert("값을 모두 입력 후 추가해주세요!")
             }
@@ -116,15 +116,15 @@ export default defineComponent({
                 for (i = 0; i < this.changes; i++) { // 디테일값 무결성 체크
                     if (this.input[i].changed_point != '' &&
                 this.input[i].before_value != 0 &&
-                this.input[i].changed_value != 0) continue;
+                this.input[i].after_value != 0) continue;
                     else break;
                 }
                 if (i == this.changes) { // 체크 이후 폼 데이터 작성
                     for (i = 0; i < this.changes; i++) {
                         this.formData.append(`detail[${i}].changed_point`, this.input[i].changed_point);
-                        this.formData.append(`detail[${i}].before_detail`, this.input[i].before_value.toString());
-                        this.formData.append(`detail[${i}].after_detail`, this.input[i].changed_value.toString());
-                        this.formData.append(`detail[${i}].unit`, this.input[i].unit);
+                        this.formData.append(`detail[${i}].before_value`, this.input[i].before_value?.toString() ?? '');
+                        this.formData.append(`detail[${i}].after_value`, this.input[i].after_value?.toString() ?? '');
+                        this.formData.append(`detail[${i}].unit`, this.input[i].unit ?? '');
                     }
                     axios.post(process.env.VUE_APP_BACKEND_ADDRESS+'/product', this.formData,
                     { headers: { 'Content-Type': 'multipart/form-data', 'Access-Control-Allow-Origin': '*'}})
@@ -152,12 +152,14 @@ export default defineComponent({
         this.category = response.category;
         this.changes = response.detail.length;
         for (let i = 0; i < response.detail.length; i++) {
-            this.input.push({changed_point: response.detail[i].changed_point, 
-                before_value: response.detail[i].before_detail,
+            this.input.push({
+                changed_point: response.detail[i].changed_point, 
+                before_value: response.detail[i].before_value,
                 unit: response.detail[i].unit,
-                changed_value: response.detail[i].after_detail
+                after_value: response.detail[i].after_value,
+                unknown: response.detail[i].unknown
             })
-            this.unit[i] = response.detail[i].unit;
+            this.unit[i] = response.detail[i].unit ?? '';
         }
     }
 });
