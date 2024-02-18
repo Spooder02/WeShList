@@ -1,7 +1,8 @@
 <template>
     <div class="m-4 p-2 rounded-xl shadow-lg">
         <div class="">
-            <img v-if="productData?.image_name" class="max-w-full" :src="'http://localhost:8081/image/'+productData?.image_name">
+            <p class="text-right text-gray-400" @click="remove()">삭제하기</p>
+            <img v-if="productData?.image_name" class="max-w-full" :src="backend_address+'/image/'+productData?.image_name">
             <img v-if="!productData?.image_name" class="w-full" src="@/assets/unavailable_image.png">
             <div class="ml-4">
                 <div id="inline-block">
@@ -48,9 +49,10 @@ export default defineComponent({
     setup() {
         const productData = ref<product| null>(null);
         let description = ref<string[]>([]);
-        
+        let backend_address = process.env.VUE_APP_BACKEND_ADDRESS;
+
         onMounted(async ()=> {
-            const response = await axios.get<product>('http://localhost:8081/product/'+useRoute().query.id);
+            const response = await axios.get<product>(process.env.VUE_APP_BACKEND_ADDRESS+'/product/'+useRoute().query.id);
             productData.value = response.data;
             for (let i = 0; i < productData.value.detail.length; i++) {
                 if (productData.value.detail[i].before_value) {
@@ -62,7 +64,17 @@ export default defineComponent({
                 }
             }
         })
-        return { productData, description };
+        return { productData, description, backend_address };
     },
+    methods: {
+        remove() {
+            axios.delete(process.env.VUE_APP_BACKEND_ADDRESS+'/product/'+this.productData?.product_id)
+            .then(() => { 
+                alert("정상적으로 삭제되었습니다!");
+                this.$router.push('/finditem');
+            })
+            .catch(() => { alert("[에러] 삭제하는 도중 문제가 발생했습니다.") })
+        }
+    }
 });
 </script>

@@ -30,7 +30,7 @@
             <select v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit" disabled>
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
-            <label class="block text-right mr-2 mb-0.5"><input type="checkbox" class="mr-1" v-model="unknown">변경 양을 몰라요</label>
+            <label class="block text-right mr-2 mb-0.5"><input type="checkbox" class="mr-1" v-model="unknown[i]">변경 양을 몰라요</label>
         </div>
         <button @click="addItem();" class="p-2 mt-2 mb-2 bg-blue-400 w-1/2 m-auto rounded-lg text-white font-semibold shadow-xl">+ 상품 등록하기</button>
     </div>
@@ -41,6 +41,7 @@ import axios from 'axios';
 import '../index.css'
 import { changed_value } from '../datatype'
 import { defineComponent } from 'vue';
+import appendOrReplaceFormData from '@/function';
 
 export default defineComponent({
     name: '',
@@ -105,11 +106,13 @@ export default defineComponent({
             else this.formData.append("imageFile", event.target.files![0]); // 있다면 교체, 없다면 추가
             this.image_url = URL.createObjectURL(event.target.files![0]);
         },
-        addItem() { // TODO : 폼 데이터 중복 append 방지
+        addItem() {
             if (this.name != null &&
             this.brand != null &&
-            this.price != null) {
+            this.price != null &&
+            this.category != null) {
                 let i;
+                
                 for (i = 0; i < this.changes; i++) { // 디테일값 무결성 체크
                     if (this.input[i].changed_point != '' &&
                         this.input[i].before_value != 0 &&
@@ -121,19 +124,19 @@ export default defineComponent({
                 if (i == this.changes) { // 체크 이후 폼 데이터 작성
                     for (i = 0; i < this.changes; i++) {
                         if (this.unknown[i]) {
-                            this.formData.append(`detail[${i}].changed_point`, this.input[i].changed_point);
-                            this.formData.append(`detail[${i}].unknown`, JSON.stringify(true));
+                            appendOrReplaceFormData(this.formData, `detail[${i}].changed_point`, this.input[i].changed_point);
+                            appendOrReplaceFormData(this.formData, `detail[${i}].unknown`, JSON.stringify(true))
                         } else {
-                            this.formData.append(`detail[${i}].changed_point`, this.input[i].changed_point);
-                            this.formData.append(`detail[${i}].before_value`, this.input[i].before_value?.toString() ?? '');
-                            this.formData.append(`detail[${i}].after_value`, this.input[i].after_value?.toString() ?? '');
-                            this.formData.append(`detail[${i}].unit`, this.input[i].unit ?? '');
+                            appendOrReplaceFormData(this.formData, `detail[${i}].changed_point`, this.input[i].changed_point);
+                            appendOrReplaceFormData(this.formData, `detail[${i}].before_value`, this.input[i].before_value?.toString() ?? '')
+                            appendOrReplaceFormData(this.formData, `detail[${i}].after_value`, this.input[i].after_value?.toString() ?? '')
+                            appendOrReplaceFormData(this.formData, `detail[${i}].unit`, this.input[i].unit ?? '')
                         }
                     }
-                    this.formData.append('name', this.name);
-                    this.formData.append('price', this.price);
-                    this.formData.append('brand', this.brand);
-                    this.formData.append('category', this.category!);
+                    appendOrReplaceFormData(this.formData, 'name', this.name);
+                    appendOrReplaceFormData(this.formData, 'price', this.price);
+                    appendOrReplaceFormData(this.formData, 'brand', this.brand);
+                    appendOrReplaceFormData(this.formData, 'category', this.category);
                     axios.post(process.env.VUE_APP_BACKEND_ADDRESS+'/product', this.formData,
                     { headers: { 'Content-Type': 'multipart/form-data', 'Access-Control-Allow-Origin': '*'}})
                     .then(() => {

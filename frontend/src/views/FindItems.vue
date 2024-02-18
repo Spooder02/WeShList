@@ -30,7 +30,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        axios.get('http://localhost:8081/product')
+        axios.get(process.env.VUE_APP_BACKEND_ADDRESS+'/product')
         .then((res) => {
             this.itemInfo = res.data;
         })

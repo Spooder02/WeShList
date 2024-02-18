@@ -48,6 +48,7 @@
 import axios from 'axios';
 import '../index.css';
 import { defineComponent } from 'vue';
+import { getNameFromToken } from '@/auth'
 
 export default defineComponent({
   name: 'Navbar',
@@ -84,20 +85,7 @@ export default defineComponent({
     checkLogin() {
       const token = sessionStorage.getItem("Authorization");
       if (token) {
-        let base64Url = token.split('.')[1];
-        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const decodedJWT = JSON.parse(
-        decodeURIComponent(
-          window
-            .atob(base64)
-            .split('')
-            .map(function (c) {
-              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join('')
-          )
-        );
-        this.username = decodedJWT.sub
+        this.username = getNameFromToken(token);
         this.isLoggedin = true;
       }
       else this.isLoggedin = false;

@@ -1,7 +1,7 @@
 <template>
     <div @click="$router.push({path: '/finditem/detail', query: { id: id } })" class="m-4 rounded-xl shadow-lg">
         <div class="h-24 p-auto">
-            <img v-if="productData.image_name" class="w-24 h-24 absolute" :src="'http://localhost:8081/image/'+productData.image_name">
+            <img v-if="productData.image_name" class="w-24 h-24 absolute" :src="backend_address+'/image/'+productData.image_name">
             <img v-if="!productData.image_name" class="w-24 h-24 absolute" src="@/assets/unavailable_image.png">
             <div id="inline-block">
                 <p class="inline ml-24 pl-2 mt-2 text-lg">{{ productData.name }}</p>
@@ -30,9 +30,11 @@ export default defineComponent({
     data(){
         return {
             preview_description: '',
+            backend_address: ''
         }
     },
     beforeMount() {
+        this.backend_address = process.env.VUE_APP_BACKEND_ADDRESS;
         if (this.$props.productData.detail[0].before_value !== null) {
             this.preview_description = `${this.$props.productData.detail[0].changed_point}
             ${this.$props.productData.detail[0].before_value}${this.$props.productData.detail[0].unit} 
