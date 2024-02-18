@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
@@ -59,7 +60,10 @@ public class ProductService {
         return productRepository.save(product);   
     }
 
-    public void deleteProduct(Long id) {
+    public void deleteProduct(Long id) throws IOException {
+        Product product = getProductById(id);
+        Path filePath = Paths.get("backend/src/main/resources/static/image/"+product.getImage_name());
+        Files.delete(filePath);
         productRepository.deleteById(id);
     }
 

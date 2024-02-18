@@ -7,6 +7,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,8 +62,13 @@ public class ProductController {
     }
 
     @DeleteMapping("/{product_id}")
-    public void deleteProduct(@PathVariable Long product_id) {
-        productService.deleteProduct(product_id);
+    public ResponseEntity<String> deleteProduct(@PathVariable Long product_id) {
+        try {
+            productService.deleteProduct(product_id);
+            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        } catch(Exception e) {
+            return new ResponseEntity<>("Error on deleting image", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
 
