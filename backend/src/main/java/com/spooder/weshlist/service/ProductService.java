@@ -23,10 +23,10 @@ public class ProductService {
         product.setUploaded_date(new Date());
         product.setUpdated_date(new Date());
         for (ProductDetail productDetail : product.getDetail()) {
-            productDetail.setProduct(product);
             if (productDetail.isUnknown())
                 productDetail.setDetailsNull();
             else productDetail.setUnknown(false);
+            productDetail.setProduct(product);
         }
         if (imageFile != null && !imageFile.isEmpty()) {
             try {

@@ -8,11 +8,7 @@
     v-for="data in itemInfo"
     :ref="data.product_id"
     :id="data.product_id"
-    :name="data.name"
-    :image="data.image_name"
-    :category="data.category"
-    :description="data.detail"
-    :update_time="data.uploaded_date"
+    :productData="data"
     />
 </template>
 
@@ -21,6 +17,7 @@ import axios from 'axios';
 import '../index.css';
 import ItemCard from '@/components/ItemCard.vue';
 import { defineComponent } from 'vue';
+import { product } from '@/datatype';
 
 export default defineComponent({
     name: '',
@@ -29,7 +26,7 @@ export default defineComponent({
     },
     data() {
         return {
-            itemInfo: Object
+            itemInfo: {} as product
         }
     },
     mounted() {

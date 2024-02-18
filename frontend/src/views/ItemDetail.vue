@@ -10,8 +10,8 @@
                 </div>
                 <div class="m-0 p-1 rounded-xl shadow-lg">
                     <p class="text-md text-black-500 text-center">변화:</p>
-                    <p v-for="detail in productData?.detail" class="text-lg text-black-500 text-center">
-                        {{ detail.changed_point }}({{ detail.before_value }}{{ detail.unit }} -> {{ detail.after_value }}{{ detail.unit }})
+                    <p v-for="desc in description" class="text-lg text-black-500 text-center">
+                        {{ desc }}
                     </p>
                 </div>
                 <div class="text-center mt-4">
@@ -47,13 +47,22 @@ import { useRoute } from 'vue-router';
 export default defineComponent({
     setup() {
         const productData = ref<product| null>(null);
+        let description = ref<string[]>([]);
         
         onMounted(async ()=> {
             const response = await axios.get<product>('http://localhost:8081/product/'+useRoute().query.id);
             productData.value = response.data;
-            console.log(productData.value)
+            for (let i = 0; i < productData.value.detail.length; i++) {
+                if (productData.value.detail[i].before_value) {
+                    description.value.push(`${productData.value.detail[i].changed_point}
+            ${productData.value.detail[i].before_value}${productData.value.detail[i].unit} 
+            -> ${productData.value.detail[i].after_value}${productData.value.detail[i].unit}`);
+                } else {
+                    description.value.push(`${productData.value.detail[i].changed_point}의 양이 감소.`)
+                }
+            }
         })
-        return { productData };
+        return { productData, description };
     },
 });
 </script>

@@ -109,10 +109,6 @@ export default defineComponent({
             if (this.name != null &&
             this.brand != null &&
             this.price != null) {
-                this.formData.append('name', this.name);
-                this.formData.append('price', this.price);
-                this.formData.append('brand', this.brand);
-                this.formData.append('category', this.category!);
                 let i;
                 for (i = 0; i < this.changes; i++) { // 디테일값 무결성 체크
                     if (this.input[i].changed_point != '' &&
@@ -126,7 +122,7 @@ export default defineComponent({
                     for (i = 0; i < this.changes; i++) {
                         if (this.unknown[i]) {
                             this.formData.append(`detail[${i}].changed_point`, this.input[i].changed_point);
-                            this.formData.append(`detail[${i}].unknown`, JSON.stringify(this.unknown[i]));
+                            this.formData.append(`detail[${i}].unknown`, JSON.stringify(true));
                         } else {
                             this.formData.append(`detail[${i}].changed_point`, this.input[i].changed_point);
                             this.formData.append(`detail[${i}].before_value`, this.input[i].before_value?.toString() ?? '');
@@ -134,6 +130,10 @@ export default defineComponent({
                             this.formData.append(`detail[${i}].unit`, this.input[i].unit ?? '');
                         }
                     }
+                    this.formData.append('name', this.name);
+                    this.formData.append('price', this.price);
+                    this.formData.append('brand', this.brand);
+                    this.formData.append('category', this.category!);
                     axios.post(process.env.VUE_APP_BACKEND_ADDRESS+'/product', this.formData,
                     { headers: { 'Content-Type': 'multipart/form-data', 'Access-Control-Allow-Origin': '*'}})
                     .then(() => {
