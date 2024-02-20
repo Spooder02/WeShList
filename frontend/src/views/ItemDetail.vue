@@ -1,7 +1,7 @@
 <template>
     <div class="m-4 p-2 rounded-xl shadow-lg">
         <div class="">
-            <p class="text-right text-gray-400" @click="remove()">삭제하기</p>
+            <p class="text-right text-gray-400"><a @click="modify()">수정하기</a> | <a @click="remove()">삭제하기</a></p>
             <img v-if="productData?.image_name" class="max-w-full" :src="backend_address+'/image/'+productData?.image_name">
             <img v-if="!productData?.image_name" class="w-full" src="@/assets/unavailable_image.png">
             <div class="ml-4">
@@ -16,7 +16,7 @@
                     </p>
                 </div>
                 <div class="text-center mt-4">
-                    <p class="font-medium">올바른 정보를 위해 제보해주세요!</p>
+                    <p class="font-medium">올바른 정보를 위해 평가해주세요!</p>
                     <button class="rounded-md bg-green-500 p-1 text-white mr-1 shadow-md hover:bg-green-600">
                         <img class="inline w-5" src="@/assets/verified.png">
                         <p class="inline ml-1.5">올바른 정보</p>
@@ -74,6 +74,9 @@ export default defineComponent({
                 this.$router.push('/finditem');
             })
             .catch(() => { alert("[에러] 삭제하는 도중 문제가 발생했습니다.") })
+        },
+        modify() {
+            this.$router.push({path: '/fixitem', query: { id: this.$route.query.id }})
         }
     }
 });

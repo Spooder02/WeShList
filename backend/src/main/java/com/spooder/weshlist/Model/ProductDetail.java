@@ -27,7 +27,7 @@ public class ProductDetail {
     @JoinColumn(name="product_no")
     private Product product;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String changed_point;
 
     @Column

@@ -1,13 +1,10 @@
 package com.spooder.weshlist.controller;
 
 import java.util.List;
-import java.io.*;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spooder.weshlist.Model.Product;
+import com.spooder.weshlist.Model.ProductDetail;
 import com.spooder.weshlist.service.ProductService;
 
-import jakarta.servlet.*;
-
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -57,8 +52,43 @@ public class ProductController {
     }
     
     @PutMapping("/{product_id}")
-    public Product updateProduct(@PathVariable Long product_id, @RequestBody Product product) {
-        return productService.updateProduct(product_id, product);
+    public ResponseEntity<String> updateProduct(@PathVariable Long product_id, @RequestBody Product updatedProduct) {
+        Product product = productService.getProductById(product_id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (updatedProduct.getUploader() == null)
+            product.setUploader("익명");
+        else
+            product.setUploader(updatedProduct.getUploader());
+
+        product.setImage_name(updatedProduct.getImage_name());
+        product.setName(updatedProduct.getName());
+        product.setPrice(updatedProduct.getPrice());
+        product.setBrand(updatedProduct.getBrand());
+        product.setCategory(updatedProduct.getCategory());
+        
+        product.setUploaded_date(updatedProduct.getUploaded_date());
+        product.setUpdator(updatedProduct.getUpdator());
+        product.setUpdated_date(updatedProduct.getUpdated_date());
+
+
+        List<ProductDetail> updatedDetails = updatedProduct.getDetail();
+        for (ProductDetail updatedDetail : updatedDetails) {
+            ProductDetail existingDetail = productService.getProductDetailByChangedPoint(updatedDetail.getChanged_point(), product);
+            if (existingDetail == null) { // 존재하지 않는 속성이면 추가
+                updatedDetail.setProduct(product);
+                product.getDetail().add(updatedDetail);
+            } else { // 아니라면 값 수정
+                existingDetail.setBefore_value(updatedDetail.getBefore_value());
+                existingDetail.setAfter_value(updatedDetail.getAfter_value());
+                existingDetail.setUnit(updatedDetail.getUnit());
+                existingDetail.setUnknown(updatedDetail.isUnknown());
+            }
+        }
+
+        productService.updateProduct(product);
+        return ResponseEntity.ok("Updated");
     }
 
     @DeleteMapping("/{product_id}")

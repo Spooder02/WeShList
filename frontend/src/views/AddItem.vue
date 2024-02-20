@@ -20,17 +20,17 @@
                 상품 변화
             <button @click="addChanges(i)" class="p-0.5 pl-1 pr-1 rounded-lg bg-green-400 text-white font-medium shadow-xl"><span class="font-black">+</span> 변화 추가</button>
             </p>
-            <input @change="setValue(i, 1, $event.target.value)" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="변화 항목">
-            <input @change="setValue(i, 2, $event.target.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)" :disabled="unknown[i]">
-            <select @input="setValue(i, 3, $event.target.value)" v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" :key="i" :disabled="unknown[i]">
+            <input @change="setValue(i, 1, $event.target!.value)" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="변화 항목">
+            <input @change="setValue(i, 2, $event.target!.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)" :disabled="unknown[i-1]">
+            <select @input="setValue(i, 3, $event.target!.value)" v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" :key="i" :disabled="unknown[i-1]">
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
             <p>↓</p>
-            <input @change="setValue(i, 4, $event.target.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)" :disabled="unknown[i]">
+            <input @change="setValue(i, 4, $event.target!.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)" :disabled="unknown[i-1]">
             <select v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit" disabled>
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
-            <label class="block text-right mr-2 mb-0.5"><input type="checkbox" class="mr-1" v-model="unknown[i]">변경 양을 몰라요</label>
+            <label class="block text-right mr-2 mb-0.5"><input type="checkbox" class="mr-1" v-model="unknown[i-1]">변경 양을 몰라요</label>
         </div>
         <button @click="addItem();" class="p-2 mt-2 mb-2 bg-blue-400 w-1/2 m-auto rounded-lg text-white font-semibold shadow-xl">+ 상품 등록하기</button>
     </div>

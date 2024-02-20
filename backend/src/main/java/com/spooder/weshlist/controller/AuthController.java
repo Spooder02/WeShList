@@ -11,9 +11,6 @@ import com.spooder.weshlist.Model.User;
 import com.spooder.weshlist.security.JwtProvider;
 import com.spooder.weshlist.service.AuthService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.web.bind.annotation.*;
 
 @Controller
