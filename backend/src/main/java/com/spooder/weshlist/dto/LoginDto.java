@@ -1,4 +1,4 @@
-package com.spooder.dto;
+package com.spooder.weshlist.dto;
 
 import lombok.Getter;
 import lombok.Setter;

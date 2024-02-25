@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import com.spooder.dto.LoginDto;
 import com.spooder.weshlist.Model.User;
+import com.spooder.weshlist.dto.LoginDto;
 import com.spooder.weshlist.security.JwtProvider;
 import com.spooder.weshlist.service.AuthService;
 

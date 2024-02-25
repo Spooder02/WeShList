@@ -32,7 +32,7 @@
             </select>
             <label :for="'checkbox' + (i - 1)" class="block text-right mr-2 mb-0.5"><input type="checkbox" :id="'checkbox' + (i - 1)" class="mr-1" v-model="unknown[i-1]">변경 양을 몰라요</label>
         </div>
-        <button @click="addItem();" class="p-2 mt-2 mb-2 bg-blue-400 w-1/2 m-auto rounded-lg text-white font-semibold shadow-xl">+ 상품 등록하기</button>
+        <button @click="addItem();" class="p-2 mt-2 mb-2 bg-blue-400 w-1/2 m-auto rounded-lg text-white font-semibold shadow-xl">+ 상품 수정하기</button>
     </div>
 </template>
 
@@ -141,12 +141,26 @@ export default defineComponent({
                     if (this.formData.has("imageFile")) {
                         axios.put(process.env.VUE_APP_BACKEND_ADDRESS+"/product/"+this.$route.query.id, this.formData, { headers: {
                             'Content-Type': 'multipart/form-data'
-                        }}) // TODO: 이미지 업데이트 대응 백엔드 로직 작성.
-                    } else { // 기존 이미지 사용
-                        this.formData.append("image_name", this.image_url.split('/')[4])
-                        axios.put(process.env.VUE_APP_BACKEND_ADDRESS+"/product/"+this.$route.query.id, this.formData, { headers: {
-                            'Content-Type': 'application/json'
                         }})
+                        .then(() => {
+                            alert("상품 수정이 완료되었습니다!");
+                            this.$router.push("/finditem");
+                        })
+                        .catch(() => {
+                            alert("[에러] 상품 수정에 실패했습니다!");
+                        })
+                    } else { // 기존 이미지 사용
+                        this.formData.append("image_name", this.image_url.split('/')[5])
+                        axios.put(process.env.VUE_APP_BACKEND_ADDRESS+"/product/"+this.$route.query.id, this.formData, { headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }})
+                        .then(() => {
+                            alert("상품 수정이 완료되었습니다!");
+                            this.$router.push("/finditem");
+                        })
+                        .catch(() => {
+                            alert("[에러] 상품 수정에 실패했습니다!");
+                        })
                     }
                         
                 } else {
@@ -162,7 +176,7 @@ export default defineComponent({
     },
     async created() {
         let response: product = (await axios.get<product>('http://localhost:8081/product/'+useRoute().query.id)).data;
-        this.image_url = response.image_name? process.env.VUE_APP_BACKEND_ADDRESS+"/image/"+response.image_name: '';
+        this.image_url = response.image_name? process.env.VUE_APP_BACKEND_ADDRESS+"/static/image/"+response.image_name: '';
         this.name = response.name;
         this.brand = response.brand;
         this.price = Number(response.price);

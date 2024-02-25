@@ -29,6 +29,7 @@ dependencies {
 	implementation 'org.springframework:spring-web:6.1.4'
 	implementation 'io.jsonwebtoken:jjwt:0.12.5'
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	implementation 'com.sun.activation:jakarta.activation:2.0.1'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 	implementation 'org.springframework.session:spring-session-core'

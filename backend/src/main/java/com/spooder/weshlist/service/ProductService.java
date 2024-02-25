@@ -4,18 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.util.TimeZone;
 
 import com.spooder.weshlist.Model.Product;
 import com.spooder.weshlist.Model.ProductDetail;
@@ -30,11 +27,15 @@ public class ProductService {
     @Autowired
     private ProductDetailRepository productDetailRepository;
 
-    private final String imageDirectory = "backend/src/main/resources/static/image/";
+    private final String imageDirectory = "backend/image/";
     
     public Product addProduct(Product product, MultipartFile imageFile) {
-        product.setUploaded_date(new Date());
-        product.setUpdated_date(new Date());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+        Date now = calendar.getTime();
+
+        product.setUploaded_date(now);
+        product.setUpdated_date(now);
         for (ProductDetail productDetail : product.getDetail()) {
             if (productDetail.isUnknown())
                 productDetail.setDetailsNull();

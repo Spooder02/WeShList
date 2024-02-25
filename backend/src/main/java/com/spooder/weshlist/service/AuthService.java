@@ -3,10 +3,9 @@ package com.spooder.weshlist.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.spooder.dto.LoginDto;
 import com.spooder.weshlist.Model.User;
+import com.spooder.weshlist.dto.LoginDto;
 import com.spooder.weshlist.repository.UserRepository;
 
 @Service
