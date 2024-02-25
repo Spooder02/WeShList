@@ -1,5 +1,6 @@
 package com.spooder.weshlist.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class ProductController {
     }
     
     @PutMapping("/{product_id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long product_id, @RequestBody Product updatedProduct) {
+    public ResponseEntity<String> updateProduct(@PathVariable Long product_id, @ModelAttribute Product updatedProduct, @RequestPart(name = "imageFile", required = false) MultipartFile imageFile) {
         Product product = productService.getProductById(product_id);
         if (product == null) {
             return ResponseEntity.notFound().build();
@@ -62,7 +63,7 @@ public class ProductController {
         else
             product.setUploader(updatedProduct.getUploader());
 
-        product.setImage_name(updatedProduct.getImage_name());
+        if (updatedProduct.getImage_name() == null) productService.replaceImageFile(product, imageFile);
         product.setName(updatedProduct.getName());
         product.setPrice(updatedProduct.getPrice());
         product.setBrand(updatedProduct.getBrand());
@@ -70,7 +71,7 @@ public class ProductController {
         
         product.setUploaded_date(updatedProduct.getUploaded_date());
         product.setUpdator(updatedProduct.getUpdator());
-        product.setUpdated_date(updatedProduct.getUpdated_date());
+        product.setUpdated_date(new Date());
 
 
         List<ProductDetail> updatedDetails = updatedProduct.getDetail();

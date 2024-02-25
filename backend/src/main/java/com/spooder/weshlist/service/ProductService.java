@@ -4,16 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 import com.spooder.weshlist.Model.Product;
 import com.spooder.weshlist.Model.ProductDetail;
@@ -27,6 +29,8 @@ public class ProductService {
 
     @Autowired
     private ProductDetailRepository productDetailRepository;
+
+    private final String imageDirectory = "backend/src/main/resources/static/image/";
     
     public Product addProduct(Product product, MultipartFile imageFile) {
         product.setUploaded_date(new Date());
@@ -37,17 +41,7 @@ public class ProductService {
             else productDetail.setUnknown(false);
             productDetail.setProduct(product);
         }
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                String originalFilename = imageFile.getOriginalFilename();
-                String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-                String imageName = product.getName().replaceAll("\\s+", "_") + fileExtension;
-                saveImageFile(imageFile, imageName);
-                product.setImage_name(imageName);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        replaceImageFile(product, imageFile);
         if (product.getUploader() == null) {
             product.setUploader("익명");
         }
@@ -73,16 +67,31 @@ public class ProductService {
 
     public void deleteProduct(Long id) throws IOException {
         Product product = getProductById(id);
-        Path filePath = Paths.get("backend/src/main/resources/static/image/"+product.getImage_name());
+        Path filePath = Paths.get(imageDirectory + product.getImage_name());
         Files.delete(filePath);
         productRepository.deleteById(id);
     }
 
     private void saveImageFile(MultipartFile imageFile, String filename) throws IOException {
-        Files.copy(imageFile.getInputStream(), Paths.get("backend/src/main/resources/static/image/", filename), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(imageFile.getInputStream(), Paths.get(imageDirectory, filename), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    public void replaceImageFile(Product product, MultipartFile imageFile) {
+        if (imageFile != null && !imageFile.isEmpty()) {
+        try {
+            String originalFilename = imageFile.getOriginalFilename();
+            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String imageName = product.getName().replaceAll("\\s+", "_") + fileExtension;
+            saveImageFile(imageFile, imageName);
+            product.setImage_name(imageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        }
     }
 
     public void updateProduct(Product product) {
         productRepository.save(product);
     }
+
 }

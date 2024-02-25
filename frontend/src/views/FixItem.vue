@@ -139,7 +139,9 @@ export default defineComponent({
                     appendOrReplaceFormData(this.formData, 'brand', this.brand);
                     appendOrReplaceFormData(this.formData, 'category', this.category);
                     if (this.formData.has("imageFile")) {
-                        alert("이미지 업데이트 구현") // TODO: 이미지 업데이트 대응 백엔드 로직 작성.
+                        axios.put(process.env.VUE_APP_BACKEND_ADDRESS+"/product/"+this.$route.query.id, this.formData, { headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }}) // TODO: 이미지 업데이트 대응 백엔드 로직 작성.
                     } else { // 기존 이미지 사용
                         this.formData.append("image_name", this.image_url.split('/')[4])
                         axios.put(process.env.VUE_APP_BACKEND_ADDRESS+"/product/"+this.$route.query.id, this.formData, { headers: {
