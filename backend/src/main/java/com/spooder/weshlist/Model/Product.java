@@ -54,4 +54,10 @@ public class Product {
     private int positive_point;
 
     private int negative_point;
+
+    @ElementCollection
+    @CollectionTable(name = "product_user_ratings", joinColumns = @JoinColumn(name = "product_id"))
+    @MapKeyColumn(name = "user_id")
+    @Column(name = "is_positive")
+    private Map<String, Boolean> userRatings;
 }

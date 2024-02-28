@@ -12,7 +12,7 @@
         <input v-model="brand" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="브랜드">
         <input v-model="price" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="가격">
         <select v-model="category" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit">
-            <option :value="null" selected disabled>-- 카테고리 --</option>
+            <option :value="''" selected disabled>-- 카테고리 --</option>
             <option v-for="j in categories.length" :value="categories[j-1]">{{ categories[j-1] }}</option>
         </select>
         <div v-for="i in changes" class="border p-1 rounded-lg mb-2" :key="i">
@@ -42,6 +42,8 @@ import '../index.css'
 import { changed_value } from '../datatype'
 import { defineComponent } from 'vue';
 import appendOrReplaceFormData from '@/function';
+import { getNameFromToken } from '@/auth';
+import { ErrorTypes } from 'vue-router';
 
 export default defineComponent({
     name: '',
@@ -58,10 +60,10 @@ export default defineComponent({
             unit: ['g'],
             input: [] as Array<changed_value>,
             formData: new FormData(),
-            name: null,
-            brand: null,
-            price: null,
-            category: null,
+            name: '',
+            brand: '',
+            price: '',
+            category: '',
             image_url: '',
             unknown: [ false ]
         }
@@ -107,10 +109,10 @@ export default defineComponent({
             this.image_url = URL.createObjectURL(event.target.files![0]);
         },
         addItem() {
-            if (this.name != null &&
-            this.brand != null &&
-            this.price != null &&
-            this.category != null) {
+            if (this.name !== '' &&
+            this.brand !== '' &&
+            this.price !== '' &&
+            this.category !== '') {
                 let i;
                 
                 for (i = 0; i < this.changes; i++) { // 디테일값 무결성 체크
@@ -133,16 +135,29 @@ export default defineComponent({
                             appendOrReplaceFormData(this.formData, `detail[${i}].unit`, this.input[i].unit ?? '')
                         }
                     }
-                    appendOrReplaceFormData(this.formData, 'name', this.name);
-                    appendOrReplaceFormData(this.formData, 'price', this.price);
-                    appendOrReplaceFormData(this.formData, 'brand', this.brand);
-                    appendOrReplaceFormData(this.formData, 'category', this.category);
-                    axios.post(process.env.VUE_APP_BACKEND_ADDRESS+'/product', this.formData,
-                    { headers: { 'Content-Type': 'multipart/form-data', 'Access-Control-Allow-Origin': '*'}})
-                    .then(() => {
-                        alert("등록이 완료되었습니다!");
-                        this.$router.push('/')
-                    });
+                    const token = this.$cookies.get("Token");
+                    axios.post(process.env.VUE_APP_BACKEND_ADDRESS+"/auth/verifyUser", {}, {
+                        headers: { Authorization: token }
+                    })
+                    .then((res) => { // 유저 토큰 검증 후 업로더 등록
+                        if (res.data === true) {
+                            appendOrReplaceFormData(this.formData, "uploader", getNameFromToken(token));
+                            appendOrReplaceFormData(this.formData, 'name', this.name);
+                            appendOrReplaceFormData(this.formData, 'price', this.price);
+                            appendOrReplaceFormData(this.formData, 'brand', this.brand);
+                            appendOrReplaceFormData(this.formData, 'category', this.category);
+                            axios.post(process.env.VUE_APP_BACKEND_ADDRESS+'/product', this.formData,
+                            { headers: { 'Content-Type': 'multipart/form-data', 'Access-Control-Allow-Origin': '*'}})
+                            .then(() => {
+                                alert("등록이 완료되었습니다!");
+                                this.$router.push('/')
+                            });
+                        } else {
+                            alert("[에러] 로그인 정보에 문제가 있습니다. 재로그인 후 다시 시도해주세요.");
+                        }
+                    })
+                    .catch(() => { alert("[에러] 로그인 후 이용하세요!"); })
+                    
                 } else {
                     alert("[에러] 상품 변화 값을 모두 입력해주세요!");
                 }

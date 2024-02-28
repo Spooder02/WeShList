@@ -172,6 +172,12 @@ export default defineComponent({
         },
         resetImage() {
             this.image_url = '';
+        },
+        setScore(caseNum: number) {
+            switch (caseNum) {
+                case 1: // Positive Score
+                    axios.post
+            }
         }
     },
     async created() {

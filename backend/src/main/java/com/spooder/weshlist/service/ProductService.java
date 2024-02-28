@@ -43,9 +43,10 @@ public class ProductService {
             productDetail.setProduct(product);
         }
         replaceImageFile(product, imageFile);
+
         if (product.getUploader() == null) {
             product.setUploader("익명");
-        }
+        } 
         
         return productRepository.save(product);
     }
@@ -95,4 +96,29 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    public void addRating(Long productId, String userId, boolean isPositive) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product != null) {
+            if (isPositive) {
+                product.setPositive_point(product.getPositive_point() + 1);
+                product.setNegative_point(product.getNegative_point() - 1);
+            } else {
+                product.setPositive_point(product.getPositive_point() - 1);
+                product.setNegative_point(product.getNegative_point() + 1);
+            }
+
+            if (product.getUserRatings().containsKey(userId)) {
+                boolean previousRating = product.getUserRatings().get(userId);
+                if (previousRating != isPositive) {
+                    // 이전 평가와 현재 평가가 다른 경우에만 수정
+                    product.getUserRatings().put(userId, isPositive);
+                }
+            } else {
+                // 새로운 유저의 평가인 경우 추가
+                product.getUserRatings().put(userId, isPositive);
+            }
+            
+            productRepository.save(product);
+        }
+    }
 }

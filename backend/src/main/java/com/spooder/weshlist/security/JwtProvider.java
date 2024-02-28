@@ -11,8 +11,12 @@ import lombok.*;
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
+    private static String secretKey;
+
     @Value("${spring.jwt.secret}")
-    private String secretKey;
+    public void setSecretKey(String secretKey) {
+        JwtProvider.secretKey = secretKey;
+    }
 
     private long tokenVaildTime = 60 * 60 * 1000L; // Unit : ms
 
@@ -22,8 +26,10 @@ public class JwtProvider {
         System.out.println("Excuted " + secretKey);
     }
 
-    public String createToken(String id, String nickname) {
+    public String createToken(String id, String nickname, String userId) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("nickname", nickname);
+        claims.put("userID", userId);
         
         return Jwts.builder()
                 .setClaims(claims)
@@ -42,5 +48,19 @@ public class JwtProvider {
             // 유효하지 않은 토큰
         }
         return false;
+    }
+
+    public static String parseJWT(String token, String claimName) {
+        try {
+            JwtParser parser = Jwts.parser()
+                                    .setSigningKey(secretKey)
+                                    .build();
+            Claims claims = parser.parseClaimsJws(token)
+                                    .getBody();
+            return claims.get(claimName, String.class);
+        } catch (Exception e) {
+            // 토큰 파싱 실패 또는 검증 실패 시 예외 처리
+            throw new IllegalArgumentException("Invalid JWT Token");
+        }
     }
 }

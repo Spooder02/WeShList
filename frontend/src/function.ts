@@ -16,3 +16,19 @@ export function changeDateFormat(targetDate: Date) {
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     return formattedDate;
 }
+
+export function validUserCase(validData: string, a: () => void, b: () => void, c: () => void) {
+    switch(validData) {
+        case "Valid User":
+            a();
+            break;
+        case "Expired User":
+            b();
+            break;
+        case "Invalid User":
+            c();
+            break;
+        default:
+            alert("[에러] 로그인 정보가 없습니다. 다시 시도해주세요")
+    }
+}

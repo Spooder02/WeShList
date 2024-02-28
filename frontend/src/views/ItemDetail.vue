@@ -32,7 +32,7 @@
             </div>
             <p class="mr-4 mt-11 text-right text-sm text-gray-300">
                 {{productData?.uploader}} 님의 제보로 등록되었습니다.<br>
-                등록일자: {{productData?.uploaded_date}}
+                등록일자: {{ uploaded_date }}
             </p>
         </div>
     </div>
@@ -44,16 +44,19 @@ import { product } from '../datatype';
 import '../index.css'
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { changeDateFormat, validUserCase } from '@/function';
+import { getNameFromToken, verifyUser } from '@/auth';
 
 export default defineComponent({
     setup() {
         const productData = ref<product| null>(null);
         let description = ref<string[]>([]);
         let backend_address = process.env.VUE_APP_BACKEND_ADDRESS;
-
+        let uploaded_date = ref('');
         onMounted(async ()=> {
             const response = await axios.get<product>(process.env.VUE_APP_BACKEND_ADDRESS+'/product/'+useRoute().query.id);
             productData.value = response.data;
+            uploaded_date.value = changeDateFormat(productData.value.uploaded_date);
             for (let i = 0; i < productData.value.detail.length; i++) {
                 if (productData.value.detail[i].before_value) {
                     description.value.push(`${productData.value.detail[i].changed_point}
@@ -64,16 +67,39 @@ export default defineComponent({
                 }
             }
         })
-        return { productData, description, backend_address };
+        return { productData, description, backend_address, uploaded_date };
     },
     methods: {
-        remove() {
-            axios.delete(process.env.VUE_APP_BACKEND_ADDRESS+'/product/'+this.productData?.product_id)
-            .then(() => { 
-                alert("정상적으로 삭제되었습니다!");
-                this.$router.push('/finditem');
-            })
-            .catch(() => { alert("[에러] 삭제하는 도중 문제가 발생했습니다.") })
+        async remove() {
+            const token = this.$cookies.get('Token');
+            let userStatus = await (async () => {
+                const result = await verifyUser(token);
+                return result;
+            })();
+            validUserCase(userStatus,
+                () => { // 정상 유저
+                    axios.get(process.env.VUE_APP_BACKEND_ADDRESS+'/product/'+this.productData?.product_id)
+                        .then((res) => {
+                            if (res.data.uploader == getNameFromToken(token)) { // 업로더가 맞다면 삭제 처리
+                                axios.delete(process.env.VUE_APP_BACKEND_ADDRESS+'/product/'+this.productData?.product_id)
+                                .then(() => { 
+                                    alert("정상적으로 삭제되었습니다!");
+                                    this.$router.push('/finditem');
+                                })
+                                .catch(() => { alert("[에러] 삭제하는 도중 문제가 발생했습니다.") })
+                            } else {
+                                alert("[에러] 본인이 게시한 상품만 삭제할 수 있습니다.");
+                            }
+                        })
+                        .catch(() => { alert("[에러] 상품 정보를 가져오는 데 실패했습니다.") })
+                },
+                () => { //  만료 유저
+                    alert("[에러] 로그인이 만료되었습니다. 다시 로그인 후 시도해주세요.");
+                }, 
+                () => { // 비정상 유저
+                    alert("[에러] 로그인 정보에 문제가 있습니다. 다시 로그인 후 이용해주세요.");
+                }
+            )
         },
         modify() {
             this.$router.push({path: '/fixitem', query: { id: this.$route.query.id }})

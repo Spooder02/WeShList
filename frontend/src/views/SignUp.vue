@@ -83,7 +83,7 @@ export default defineComponent({
                 this.signupData.tel = phoneNumber;
             }
         },
-        signup() {
+        signup() { // TODO : DB 중복 값 입력 시 알림 구현
             const data = this.signupData;
             if (data.password != data.repeat_password) {
                 alert("입력된 비밀번호가 서로 다릅니다");

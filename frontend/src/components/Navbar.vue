@@ -47,7 +47,7 @@
 <script lang="ts">
 import axios from 'axios';
 import '../index.css';
-import { defineComponent } from 'vue';
+import { VueElement, defineComponent, inject } from 'vue';
 import { getNameFromToken } from '@/auth'
 
 export default defineComponent({
@@ -77,13 +77,13 @@ export default defineComponent({
     logout() {
       this.isLoggedin = false;
       this.username = '';
-      sessionStorage.removeItem("Authorization")
+      this.$cookies.remove("Token");
     },
     refresh() {
       this.$forceUpdate();
     },
     checkLogin() {
-      const token = sessionStorage.getItem("Authorization");
+      const token = this.$cookies.get("Token")
       if (token) {
         this.username = getNameFromToken(token);
         this.isLoggedin = true;

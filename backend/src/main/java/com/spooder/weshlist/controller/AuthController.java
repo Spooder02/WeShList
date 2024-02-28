@@ -1,6 +1,7 @@
 package com.spooder.weshlist.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 
 import com.spooder.weshlist.Model.User;
 import com.spooder.weshlist.dto.LoginDto;
+import com.spooder.weshlist.repository.UserRepository;
 import com.spooder.weshlist.security.JwtProvider;
 import com.spooder.weshlist.service.AuthService;
 
@@ -49,7 +51,7 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody LoginDto request) {
         if (authService.Login(request)) {
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + jwtProvider.createToken(request.getId(), authService.getUser(request.getId()).getNickname()));
+            headers.add("Authorization", jwtProvider.createToken(request.getId(), authService.getUser(request.getId()).getNickname(), authService.getUser(request.getId()).getID()));
             return new ResponseEntity<>("Successfully Logged In", headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Failed to login", HttpStatus.BAD_REQUEST);
@@ -68,4 +70,13 @@ public class AuthController {
         }
     }
     
+    @CrossOrigin(origins = "*", exposedHeaders = "Authorization")
+    @PostMapping("/verifyUser")
+    public ResponseEntity<Boolean> verifyUser(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        if (token != null) {
+            return ResponseEntity.ok(jwtProvider.validateToken(token));
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

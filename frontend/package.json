@@ -20,6 +20,7 @@
     "stream": "^0.0.2",
     "util": "^0.12.5",
     "vue": "^3.4.9",
+    "vue-cookies": "^1.8.3",
     "vue-loader": "^17.3.1",
     "vue-router": "^4.2.5",
     "vueify": "^2.0.1",

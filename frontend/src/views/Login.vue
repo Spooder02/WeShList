@@ -35,7 +35,7 @@ export default defineComponent({
                     "password": this.loginData.password
                 })
                 .then(res => {
-                    sessionStorage.setItem("Authorization", res.headers.authorization);
+                    this.$cookies.set("Token", res.headers.authorization);
                     this.$router.push('/');
                     this.$nextTick(async () => {
                         await new Promise((resolve) => setTimeout(resolve, 0));
