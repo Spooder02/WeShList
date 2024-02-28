@@ -19,12 +19,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spooder.weshlist.Model.Product;
 import com.spooder.weshlist.Model.ProductDetail;
+import com.spooder.weshlist.dto.RatingDto;
 import com.spooder.weshlist.service.ProductService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -34,22 +38,22 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+
     @PostMapping
     public ResponseEntity<Product> addProduct(@ModelAttribute Product product, @RequestPart(name = "imageFile", required = false) MultipartFile imageFile) {
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        System.out.println(product.getUploader() + " is uploader");
         Product savedProduct = productService.addProduct(product, imageFile);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
     @PostMapping("/{productId}/ratings")
     public ResponseEntity<String> addRating(@PathVariable Long productId, 
-                                            @RequestParam String userId, 
-                                            @RequestParam boolean isPositive) {
-        productService.addRating(productId, userId, isPositive);
-        return ResponseEntity.ok("평가가 성공적으로 추가/수정되었습니다.");
+                                            @RequestBody RatingDto ratingDto) {
+        String result = productService.addRating(productId, ratingDto.getUserId(), Boolean.parseBoolean(ratingDto.getIsPositive()));
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping
@@ -68,7 +72,6 @@ public class ProductController {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
         Date now = calendar.getTime();
-        System.out.println(now);
         if (product == null) {
             return ResponseEntity.notFound().build();
         }

@@ -14,7 +14,7 @@ export function getNameFromToken(jwt: string): any {
 }
 
 export function getUserIdFromToken(jwt: string): any {
-    return decodeToken(jwt).userId
+    return decodeToken(jwt).userID;
 }
 
 export function verifyUser(jwt: string): Promise<string> {

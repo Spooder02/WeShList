@@ -104,12 +104,10 @@ export default defineComponent({
                 })
                 .then(res => {
                     alert("회원가입 성공");
-                    console.log(res);
                     this.$router.push("/")
                 })
                 .catch(res => {
                     alert("에러 발생");
-                    console.log(res);
                 })
             }
         }

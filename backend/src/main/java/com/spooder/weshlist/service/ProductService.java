@@ -14,6 +14,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.spooder.weshlist.Model.Product;
 import com.spooder.weshlist.Model.ProductDetail;
 import com.spooder.weshlist.repository.ProductDetailRepository;
@@ -28,6 +31,7 @@ public class ProductService {
     private ProductDetailRepository productDetailRepository;
 
     private final String imageDirectory = "backend/image/";
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
     
     public Product addProduct(Product product, MultipartFile imageFile) {
         Calendar calendar = Calendar.getInstance();
@@ -96,29 +100,38 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public void addRating(Long productId, String userId, boolean isPositive) {
+    public String addRating(Long productId, String userId, boolean isPositive) {
         Product product = productRepository.findById(productId).orElse(null);
+        String result = "";
         if (product != null) {
-            if (isPositive) {
-                product.setPositive_point(product.getPositive_point() + 1);
-                product.setNegative_point(product.getNegative_point() - 1);
-            } else {
-                product.setPositive_point(product.getPositive_point() - 1);
-                product.setNegative_point(product.getNegative_point() + 1);
-            }
-
             if (product.getUserRatings().containsKey(userId)) {
                 boolean previousRating = product.getUserRatings().get(userId);
-                if (previousRating != isPositive) {
-                    // 이전 평가와 현재 평가가 다른 경우에만 수정
+                if (previousRating != isPositive) { // 이전 평가와 현재 평가가 다른 경우에만 수정
+                    if (isPositive) {
+                        product.setPositive_point(product.getPositive_point() + 1);
+                        product.setNegative_point(product.getNegative_point() - 1);
+                        result = "neg to pos";
+                    } else {
+                        product.setPositive_point(product.getPositive_point() - 1);
+                        product.setNegative_point(product.getNegative_point() + 1);
+                        result = "pos to neg";
+                    }
                     product.getUserRatings().put(userId, isPositive);
                 }
             } else {
                 // 새로운 유저의 평가인 경우 추가
+                if (isPositive) {
+                    product.setPositive_point(product.getPositive_point() + 1);
+                    result = "pos";
+                } else {
+                    product.setNegative_point(product.getNegative_point() + 1);
+                    result = "neg";
+                } 
                 product.getUserRatings().put(userId, isPositive);
             }
-            
             productRepository.save(product);
+            return result;
         }
+        return "product is null";
     }
 }
