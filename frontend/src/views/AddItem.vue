@@ -15,18 +15,21 @@
             <option :value="''" selected disabled>-- 카테고리 --</option>
             <option v-for="j in categories.length" :value="categories[j-1]">{{ categories[j-1] }}</option>
         </select>
-        <div v-for="i in changes" class="border p-1 rounded-lg mb-2" :key="i">
+        <div v-for="i in input.length" class="border p-1 rounded-lg mb-2" :key="i">
             <p class="text-base text-gray-700 font-semibold flex justify-between mb-2">
                 상품 변화
-            <button @click="addChanges(i)" class="p-0.5 pl-1 pr-1 rounded-lg bg-green-400 text-white font-medium shadow-xl"><span class="font-black">+</span> 변화 추가</button>
+            <div>
+                <button @click="removeChanges(i)" class="p-0.5 pl-1 pr-1 mr-2 rounded-lg bg-red-400 text-white font-medium shadow-xl"><span class="font-black ml-0.5">-</span> 변화 삭제</button>
+                <button @click="addChanges(i)" class="p-0.5 pl-1 pr-1 rounded-lg bg-green-400 text-white font-medium shadow-xl"><span class="font-black ml-0.5">+</span> 변화 추가</button>
+            </div>
             </p>
-            <input @change="setValue(i, 1, $event.target!.value)" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="변화 항목">
-            <input @change="setValue(i, 2, $event.target!.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)" :disabled="unknown[i-1]">
+            <input v-model="input[i-1].changed_point" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="변화 항목">
+            <input v-model="input[i-1].before_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)" :disabled="unknown[i-1]">
             <select @input="setValue(i, 3, $event.target!.value)" v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" :key="i" :disabled="unknown[i-1]">
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
             <p>↓</p>
-            <input @change="setValue(i, 4, $event.target!.value)" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)" :disabled="unknown[i-1]">
+            <input v-model="input[i-1].after_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)" :disabled="unknown[i-1]">
             <select v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit" disabled>
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
@@ -40,13 +43,13 @@
 import axios from 'axios';
 import '../index.css'
 import { changed_value } from '../datatype'
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import appendOrReplaceFormData from '@/function';
 import { getNameFromToken } from '@/auth';
 import { ErrorTypes } from 'vue-router';
 
 export default defineComponent({
-    name: '',
+    name: 'AddItem  ',
     components: {
         
     },
@@ -58,7 +61,7 @@ export default defineComponent({
         '커피/원두/차', '과자/초콜릿/시리얼', '면/통조림/가공식품', '가루/조미료/오일', '장/소스/드레싱', '유제품/아이스크림',
     '냉장/냉동/간편식품', '건강식품', '분유/어린이식품'],
             unit: ['g'],
-            input: [] as Array<changed_value>,
+            input: reactive([]) as Array<changed_value>,
             formData: new FormData(),
             name: '',
             brand: '',
@@ -96,11 +99,20 @@ export default defineComponent({
                 this.input[i-1].before_value != 0 &&
                 this.input[i-1].after_value != 0) || 
                 (this.input[i-1].changed_point != '' && this.unknown[i])) { // 값 무결성 체크
-            this.changes+=1;
+            this.changes++;
             this.unit[i]='g';
             this.input.push({changed_point: '', before_value: null, unit: 'g', after_value: null, unknown: false});
             } else {
                 alert("값을 모두 입력 후 추가해주세요!")
+            }
+        },
+        removeChanges(i:number) {
+            if (this.input.length <= 1) {
+                alert("[에러] 최소 1개 이상의 변화는 입력해야 합니다!");
+            } else {
+                this.input.splice(i-1, 1);
+                this.changes--;
+                this.unit.splice(i-1, 1);
             }
         },
         uploadImage(event: { target: HTMLInputElement }) {

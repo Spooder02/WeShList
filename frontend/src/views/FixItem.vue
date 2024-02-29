@@ -15,22 +15,25 @@
             <option :value="null" selected disabled>-- 카테고리 --</option>
             <option v-for="j in categories.length" :value="categories[j-1]">{{ categories[j-1] }}</option>
         </select>
-        <div v-for="i in changes" class="border p-1 rounded-lg mb-2" :key="i">
+        <div v-for="i in detail.length" class="border p-1 rounded-lg mb-2" :key="i">
             <p class="text-base text-gray-700 font-semibold flex justify-between mb-2">
                 상품 변화
-            <button @click="addChanges(i)" class="p-0.5 pl-1 pr-1 rounded-lg bg-green-400 text-white font-medium shadow-xl"><span class="font-black">+</span> 변화 추가</button>
+            <div>
+                <button @click="removeChanges(i)" class="p-0.5 pl-1 pr-1 mr-2 rounded-lg bg-red-400 text-white font-medium shadow-xl"><span class="font-black ml-0.5">-</span> 변화 삭제</button>
+                <button @click="addChanges(i)" class="p-0.5 pl-1 pr-1 rounded-lg bg-green-400 text-white font-medium shadow-xl"><span class="font-black ml-0.5">+</span> 변화 추가</button>
+            </div>
             </p>
-            <input @change="setValue(i, 1, $event.target!.value)" :value="detail[i-1]?.changed_point" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="변화 항목">
-            <input @change="setValue(i, 2, $event.target!.value)" :value="detail[i-1]?.before_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)" :disabled="unknown[i-1]">
+            <input v-model="detail[i-1].changed_point" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="변화 항목">
+            <input v-model="detail[i-1].before_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)" :disabled="unknown[i-1]">
             <select @input="setValue(i, 3, $event.target!.value)" v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" :key="i" :disabled="unknown[i-1]">
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
             <p>↓</p>
-            <input @change="setValue(i, 4, $event.target!.value)" :value="detail[i-1]?.after_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)" :disabled="unknown[i-1]">
+            <input v-model="detail[i-1].after_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)" :disabled="unknown[i-1]">
             <select v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit" disabled>
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
-            <label :for="'checkbox' + (i - 1)" class="block text-right mr-2 mb-0.5"><input type="checkbox" :id="'checkbox' + (i - 1)" class="mr-1" v-model="unknown[i-1]">변경 양을 몰라요</label>
+            <label class="block text-right mr-2 mb-0.5"><input type="checkbox" class="mr-1" v-model="unknown[i-1]">변경 양을 몰라요</label>
         </div>
         <button @click="addItem();" class="p-2 mt-2 mb-2 bg-blue-400 w-1/2 m-auto rounded-lg text-white font-semibold shadow-xl">+ 상품 수정하기</button>
     </div>
@@ -102,6 +105,15 @@ export default defineComponent({
                 alert("값을 모두 입력 후 추가해주세요!")
             }
         },
+        removeChanges(i:number) {
+            if (this.detail.length <= 1) {
+                alert("[에러] 최소 1개 이상의 변화는 입력해야 합니다!");
+            } else {
+                this.detail.splice(i-1, 1);
+                this.changes--;
+                this.unit.splice(i-1, 1);
+            }
+        },
         uploadImage(event: { target: HTMLInputElement }) {
             if (this.formData.has("imageFile")) this.formData.set("imageFile", event.target.files![0]);
             else this.formData.append("imageFile", event.target.files![0]); // 있다면 교체, 없다면 추가
@@ -138,6 +150,7 @@ export default defineComponent({
                     appendOrReplaceFormData(this.formData, 'price', this.price.toString());
                     appendOrReplaceFormData(this.formData, 'brand', this.brand);
                     appendOrReplaceFormData(this.formData, 'category', this.category);
+                    
                     if (this.formData.has("imageFile")) {
                         axios.put(process.env.VUE_APP_BACKEND_ADDRESS+"/product/"+this.$route.query.id, this.formData, { headers: {
                             'Content-Type': 'multipart/form-data'
