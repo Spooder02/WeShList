@@ -83,32 +83,58 @@ export default defineComponent({
                 this.signupData.tel = phoneNumber;
             }
         },
-        signup() { // TODO : DB 중복 값 입력 시 알림 구현
+        signup() {
             const data = this.signupData;
-            if (data.password != data.repeat_password) {
-                alert("입력된 비밀번호가 서로 다릅니다");
-            } else if (data.id &&
+            const regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+            if (data.id &&
             data.email &&
             data.password &&
             data.repeat_password &&
             data.name &&
             data.nickname &&
             data.tel) { // 입력 데이터 무결성 검사
-                axios.post(process.env.VUE_APP_BACKEND_ADDRESS+"/auth", {
-                    "id": data.id,
-                    "email": data.email,
-                    "password": data.password,
-                    "name": data.name,
-                    "nickname": data.nickname,
-                    "tel": data.tel
-                })
-                .then(res => {
-                    alert("회원가입 성공");
-                    this.$router.push("/")
-                })
-                .catch(res => {
-                    alert("에러 발생");
-                })
+                let i = 1;
+                switch (i) {
+                    case 1:
+                        if (data.id.length >= 8) i++;
+                        else {
+                            alert("아이디는 최소 8자 이상으로 설정해주세요!");
+                            break;
+                        }
+                        if (regex.test(data.email)) i++;
+                        else {
+                            alert("유효하지 않은 이메일 형식입니다.");
+                            break;
+                        }
+                        if (data.password === data.repeat_password) i++;
+                        else {
+                            alert("비밀번호가 서로 다릅니다. 다시 입력해주세요.");
+                            break;
+                        }
+                        if (data.password.length >= 8) i++;
+                        else {
+                            alert("비밀번호는 최소 8자 이상으로 설정해주세요!");
+                            break;
+                        }
+                        case 5:
+                            axios.post(process.env.VUE_APP_BACKEND_ADDRESS+"/auth", {
+                                "id": data.id,
+                                "email": data.email,
+                                "password": data.password,
+                                "name": data.name,
+                                "nickname": data.nickname,
+                                "tel": data.tel
+                            })
+                            .then(res => {
+                                alert("회원가입 성공");
+                                this.$router.push("/")
+                            })
+                            .catch(res => {
+                                alert("에러 발생");
+                    })
+                        
+                }
+                
             }
         }
     }

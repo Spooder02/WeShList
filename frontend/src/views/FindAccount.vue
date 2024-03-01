@@ -12,7 +12,7 @@
     </div>
 </template>
 
-<script lang="ts"> // TODO: 아이디, 비밀번호 분실 백엔드 로직 구현
+<script lang="ts">
 import '../index.css'
 import { defineComponent } from 'vue';
 
