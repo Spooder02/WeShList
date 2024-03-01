@@ -41,7 +41,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script lang="ts"> // TODO: 회원가입 휴대폰 인증 구현, 프론트/백 단에서 회원가입 최소 가입 조건문, 에러 메시지 백엔드 -> 프론트 출력 구현
 import '../index.css'
 import { signupData } from '../datatype';
 import { defineComponent } from 'vue';

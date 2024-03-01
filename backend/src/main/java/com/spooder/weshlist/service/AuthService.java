@@ -1,5 +1,7 @@
 package com.spooder.weshlist.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     public User addUser(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
@@ -37,6 +41,11 @@ public class AuthService {
 
     public User getUser(String id) {
         return userRepository.findByID(id);
+    }
+
+    public String getUserId(String tel) {
+        User user = userRepository.findByTel(tel);
+        return user.getID();
     }
 
     public User resetPassword(Long id, String password) {

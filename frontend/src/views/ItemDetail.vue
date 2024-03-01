@@ -2,7 +2,7 @@
     <div class="m-4 p-2 rounded-xl shadow-lg">
         <div class="">
             <p class="text-right text-gray-400"><a @click="modify()">수정하기</a> | <a @click="remove()">삭제하기</a></p>
-            <img v-if="productData?.image_name" class="max-w-full" :src="backend_address+'/static/image/'+productData?.image_name">
+            <img v-if="productData?.image_name" class="max-w-full mx-auto" :src="backend_address+'/static/image/'+productData?.image_name">
             <img v-if="!productData?.image_name" class="w-full" src="@/assets/unavailable_image.png">
             <div class="ml-4">
                 <div id="inline-block">

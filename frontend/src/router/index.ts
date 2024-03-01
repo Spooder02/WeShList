@@ -41,6 +41,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/FindAccount.vue')
   },
   {
+    path: '/findaccount/lostid',
+    name: 'LostId',
+    component: () => import('@/views/LostId.vue')
+  },
+  {
     path: '/additem',
     name: 'AddItem',
     component: () => import('@/views/AddItem.vue')

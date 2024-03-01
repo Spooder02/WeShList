@@ -1,5 +1,7 @@
 package com.spooder.weshlist.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.http.HttpHeaders;
@@ -9,11 +11,14 @@ import org.springframework.stereotype.Controller;
 
 import com.spooder.weshlist.Model.User;
 import com.spooder.weshlist.dto.LoginDto;
+import com.spooder.weshlist.dto.TelDto;
 import com.spooder.weshlist.repository.UserRepository;
 import com.spooder.weshlist.security.JwtProvider;
 import com.spooder.weshlist.service.AuthService;
+import com.spooder.weshlist.service.ProductService;
 
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequestMapping("/auth")
@@ -24,6 +29,8 @@ public class AuthController {
     
     @Autowired
     private JwtProvider jwtProvider;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     @GetMapping
     @ResponseBody
@@ -39,6 +46,16 @@ public class AuthController {
         User savedUser = authService.addUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
+
+    @PostMapping("/findId")
+    public ResponseEntity<String> getUserIdFromTel(@RequestBody TelDto tel) {
+        try {
+            return ResponseEntity.ok(authService.getUserId(tel.getTel()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
     
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {

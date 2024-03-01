@@ -33,8 +33,8 @@
       </div>
       <a @click="$router.push('/')" class="block">메인</a>
       <a @click="$router.push('/introduct')" class="block mt-2">소개</a>
-      <a @click="$router.push('/finditem')" class="block mt-2">상품 찾기</a>
       <a @click="$router.push('/additem')" class="block mt-2">상품 제보</a>
+      <a @click="$router.push('/finditem')" class="block mt-2">상품 찾기</a>
       <div v-if="!isLoggedin" class="mt-3">
         <a @click="$router.push('/login')" class="font-medium">로그인</a>
         <span class="ml-1 mr-1">|</span>
