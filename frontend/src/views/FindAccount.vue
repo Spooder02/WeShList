@@ -6,7 +6,7 @@
             아이디 분실
         </button>
         <button class="p-2 bg-white shadow-lg rounded-lg font-medium">
-            <img src="@/assets/key(1).png" class="w-16 m-auto">
+            <img @click="$router.push('/findaccount/lostpw')" src="@/assets/key(1).png" class="w-16 m-auto">
             비밀번호 분실
         </button>
     </div>

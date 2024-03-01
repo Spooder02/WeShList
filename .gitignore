@@ -6,3 +6,7 @@
 /backend/.gradle/
 /backend/build/
 /frontend/.env
+.DS_Store
+/frontend/.DS_Store
+/frontend/src/.DS_Store
+/frontend/src/assets/.DS_Store

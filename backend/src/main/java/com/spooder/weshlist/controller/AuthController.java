@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
 import com.spooder.weshlist.Model.User;
+import com.spooder.weshlist.dto.IdDto;
 import com.spooder.weshlist.dto.LoginDto;
 import com.spooder.weshlist.dto.TelDto;
 import com.spooder.weshlist.repository.UserRepository;
@@ -18,6 +19,9 @@ import com.spooder.weshlist.service.AuthService;
 import com.spooder.weshlist.service.ProductService;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @Controller
@@ -55,7 +59,31 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping("/checkId")
+    public ResponseEntity<String> checkId(@RequestBody IdDto id) {
+        try {
+            logger.info(id.getId());
+            User user = authService.getUser(id.getId());
+            String userId = user.getID();
+            return ResponseEntity.ok(userId);
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return ResponseEntity.badRequest().build();
+        }
+    }
     
+    @PostMapping("/resetPassword")
+    public ResponseEntity<String> resetPassword(@RequestBody LoginDto user) {
+        logger.info(user.getId()+" is id / " + user.getPassword() + " is password");
+        try {
+            authService.resetPassword(authService.getUser(user.getId()).getKey_id(), user.getPassword());
+            return ResponseEntity.ok("Success on resetting password");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+    }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {

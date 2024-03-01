@@ -50,7 +50,8 @@ public class AuthService {
 
     public User resetPassword(Long id, String password) {
         User user = userRepository.findById(id).orElse(null);
-        user.setPassword(password);
+        String encodedPassword = passwordEncoder.encode(password);
+        user.setPassword(encodedPassword);
         return userRepository.save(user);
     }
 
