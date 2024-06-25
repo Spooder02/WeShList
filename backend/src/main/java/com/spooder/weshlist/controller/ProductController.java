@@ -8,6 +8,7 @@ import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.spooder.weshlist.Model.Product;
 import com.spooder.weshlist.Model.ProductDetail;
 import com.spooder.weshlist.dto.RatingDto;
+import com.spooder.weshlist.service.FileService;
 import com.spooder.weshlist.service.ProductService;
 
 import org.slf4j.Logger;
@@ -38,6 +41,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private FileService fileService;
+
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     @PostMapping
@@ -45,7 +51,9 @@ public class ProductController {
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Product savedProduct = productService.addProduct(product, imageFile);
+        Product savedProduct = replaceImage(product, imageFile); // Image 처리 후, Service 단에 등록
+        savedProduct = productService.addProduct(savedProduct);
+        
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
@@ -68,6 +76,8 @@ public class ProductController {
     
     @PutMapping("/{product_id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long product_id, @ModelAttribute Product updatedProduct, @RequestPart(name = "imageFile", required = false) MultipartFile imageFile) {
+
+        // 기존의 Product 불러온 후 새로운 Product의 정보를 주입해줌.
         Product product = productService.getProductById(product_id);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
@@ -80,8 +90,8 @@ public class ProductController {
         else
             product.setUploader(updatedProduct.getUploader());
 
-        if (updatedProduct.getImage_name() == null) productService.replaceImageFile(product, imageFile);
-        System.out.println(updatedProduct.getBrand());
+        replaceImage(product, imageFile); // 이미지 없으면 알아서 걸러주므로, 일단 보내기
+
         product.setName(updatedProduct.getName());
         product.setPrice(updatedProduct.getPrice());
         product.setBrand(updatedProduct.getBrand());
@@ -117,6 +127,19 @@ public class ProductController {
         } catch(Exception e) {
             return new ResponseEntity<>("Error on deleting image", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private Product replaceImage(Product product, MultipartFile imageFile) { // Product와 imageFile을 보내면 기존 Product에 이미지 업로드 및 등록 처리
+        if (imageFile == null || imageFile.isEmpty()) {
+            return product; // imageFile이 없으면 기존 product 반환
+        }
+        try {
+            fileService.uploadImage(imageFile);
+            product.setImage_name(imageFile.getOriginalFilename());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return product;
     }
 }
 

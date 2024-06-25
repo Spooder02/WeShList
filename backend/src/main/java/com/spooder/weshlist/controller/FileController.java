@@ -2,39 +2,31 @@ package com.spooder.weshlist.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ResourceUtils;
+import org.springframework.security.access.method.P;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.activation.MimetypesFileTypeMap;
-
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.spooder.weshlist.service.FileService;
 
 @RestController
+@Component
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/static")
+@RequestMapping("/file")
 public class FileController {
-    @GetMapping("/image/{filename}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
-        try {
-            File file = ResourceUtils.getFile("file:backend/image/"+filename);
-            if (file.exists()) {
-                byte[] imageFile = Files.readAllBytes(file.toPath());
-                String mimeType = new MimetypesFileTypeMap().getContentType(file);
-                MediaType mediaType = MediaType.parseMediaType(mimeType);
+    
+    @Autowired
+    private FileService fileService;
 
-                return ResponseEntity.ok()
-                                    .contentType(mediaType)
-                                    .body(imageFile);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
-        
+    public ResponseEntity<String> uploadImage(MultipartFile imageFile) {
+        return fileService.uploadImage(imageFile);
     }
     
 }

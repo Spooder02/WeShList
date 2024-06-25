@@ -2,7 +2,7 @@
     <div class="m-4 p-2 rounded-xl shadow-lg">
         <div class="">
             <p class="text-right text-gray-400"><a @click="modify()">수정하기</a> | <a @click="remove()">삭제하기</a></p>
-            <img v-if="productData?.image_name" class="max-w-full mx-auto" :src="backend_address+'/static/image/'+productData?.image_name">
+            <img v-if="productData?.image_name" class="max-w-full mx-auto" :src="static_address+productData?.image_name">
             <img v-if="!productData?.image_name" class="w-full" src="@/assets/unavailable_image.png">
             <div class="ml-4">
                 <div id="inline-block">
@@ -51,7 +51,7 @@ export default defineComponent({
     setup() {
         let productData = ref<product| null>(null);
         let description = ref<string[]>([]);
-        let backend_address = process.env.VUE_APP_BACKEND_ADDRESS;
+        let static_address = process.env.VUE_APP_STATIC_ADDRESS;
         let uploaded_date = ref('');
 
         onMounted(async ()=> {
@@ -85,7 +85,7 @@ export default defineComponent({
             productData.value!.negative_point--;
         }
 
-        return { productData, description, backend_address, uploaded_date, addPosValue, subPosValue, addNegValue, subNegValue };
+        return { productData, description, static_address, uploaded_date, addPosValue, subPosValue, addNegValue, subNegValue };
     },
     methods: {
         async remove() {

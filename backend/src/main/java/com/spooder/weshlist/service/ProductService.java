@@ -1,6 +1,7 @@
 package com.spooder.weshlist.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,10 +18,15 @@ import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.spooder.weshlist.Model.Product;
 import com.spooder.weshlist.Model.ProductDetail;
+import com.spooder.weshlist.controller.FileController;
 import com.spooder.weshlist.repository.ProductDetailRepository;
 import com.spooder.weshlist.repository.ProductRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 public class ProductService {
@@ -33,7 +39,7 @@ public class ProductService {
     private final String imageDirectory = "backend/image/";
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
     
-    public Product addProduct(Product product, MultipartFile imageFile) {
+    public Product addProduct(Product product) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
         Date now = calendar.getTime();
@@ -46,7 +52,6 @@ public class ProductService {
             else productDetail.setUnknown(false);
             productDetail.setProduct(product);
         }
-        replaceImageFile(product, imageFile);
 
         if (product.getUploader() == null) {
             product.setUploader("익명");
@@ -76,24 +81,6 @@ public class ProductService {
         Path filePath = Paths.get(imageDirectory + product.getImage_name());
         Files.delete(filePath);
         productRepository.deleteById(id);
-    }
-
-    private void saveImageFile(MultipartFile imageFile, String filename) throws IOException {
-        Files.copy(imageFile.getInputStream(), Paths.get(imageDirectory, filename), StandardCopyOption.REPLACE_EXISTING);
-    }
-
-    public void replaceImageFile(Product product, MultipartFile imageFile) {
-        if (imageFile != null && !imageFile.isEmpty()) {
-        try {
-            String originalFilename = imageFile.getOriginalFilename();
-            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String imageName = product.getName().replaceAll("\\s+", "_") + fileExtension;
-            saveImageFile(imageFile, imageName);
-            product.setImage_name(imageName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        }
     }
 
     public void updateProduct(Product product) {
