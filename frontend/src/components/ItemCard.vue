@@ -7,8 +7,8 @@
                 <p class="inline ml-24 pl-2 mt-2 text-lg">{{ productData.name }}</p>
                 <p class="inline ml-1 text-sm text-gray-500">{{ productData.category }}</p>
             </div>
-            <p class="ml-24 m-0 pl-2 text-sm text-gray-500">{{ preview_description }}<label class="block mt-1">... 더보기</label></p>
-            <p class="mr-3 mt-2 text-right text-xs text-gray-300">등록 날짜: {{ uploaded_date }}</p>
+            <p class="ml-24 m-0 pl-2 text-sm text-gray-500">{{ preview_description }}<label class="block mt-1">... more</label></p>
+            <p class="mr-3 mt-2 text-right text-xs text-gray-300">Uploaded at {{ uploaded_date }}</p>
         </div>
     </div>
 </template>
@@ -43,7 +43,7 @@ export default defineComponent({
             ${this.$props.productData.detail[0].before_value}${this.$props.productData.detail[0].unit} 
             -> ${this.$props.productData.detail[0].after_value}${this.$props.productData.detail[0].unit} `
         } else {
-            this.preview_description = `${this.$props.productData.detail[0].changed_point}의 양이 줄음.`
+            this.preview_description = `${this.$props.productData.detail[0].changed_point} is decreased.`
         }
     }
 });

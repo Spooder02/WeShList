@@ -1,7 +1,7 @@
 <template>
     <div class="m-4 p-2 rounded-xl shadow-lg">
         <div class="">
-            <p class="text-right text-gray-400"><a @click="modify()">수정하기</a> | <a @click="remove()">삭제하기</a></p>
+            <p class="text-right text-gray-400"><a @click="modify()">Modify</a> | <a @click="remove()">Delete</a></p>
             <img v-if="productData?.image_name" class="max-w-full mx-auto" :src="static_address+productData?.image_name">
             <img v-if="!productData?.image_name" class="w-full" src="@/assets/unavailable_image.png">
             <div class="ml-4">
@@ -10,29 +10,29 @@
                 <p class="inline ml-1 text-sm text-gray-500">{{ productData?.category }}</p>
                 </div>
                 <div class="m-0 p-1 rounded-xl shadow-lg">
-                    <p class="text-md text-black-500 text-center">변화:</p>
+                    <p class="text-md text-black-500 text-center">Changes:</p>
                     <p v-for="desc in description" class="text-lg text-black-500 text-center">
                         {{ desc }}
                     </p>
                 </div>
                 <div class="text-center mt-4">
-                    <p class="font-medium">올바른 정보를 위해 평가해주세요!</p>
+                    <p class="font-medium">Rate this information for the right information!</p>
                     <button @click="setPoint(true)" class="rounded-md bg-green-500 p-1 text-white mr-1 shadow-md hover:bg-green-600">
                         <img class="inline w-5" src="@/assets/verified.png">
-                        <p class="inline ml-1.5">올바른 정보</p>
+                        <p class="inline ml-1.5">Correct Info</p>
                         <p class="font-bold">{{ productData?.positive_point }}</p>
                     </button>
                     <button @click="setPoint(false)" class="rounded-md bg-red-500 p-1 text-white m-1 shadow-md hover:bg-red-600">
                         <img class="inline w-5" src="@/assets/cancel.png">
-                        <p class="inline ml-1.5">잘못된 정보</p>
+                        <p class="inline ml-1.5">Wrong Info</p>
                         <p class="font-bold">{{ productData?.negative_point }}</p>
                     </button>
                 </div>
                 
             </div>
             <p class="mr-4 mt-11 text-right text-sm text-gray-300">
-                {{productData?.uploader}} 님의 제보로 등록되었습니다.<br>
-                등록일자: {{ uploaded_date }}
+                Uploader : {{productData?.uploader}}<br>
+                Uploaded date: {{ uploaded_date }}
             </p>
         </div>
     </div>
@@ -64,7 +64,7 @@ export default defineComponent({
             ${productData.value.detail[i].before_value}${productData.value.detail[i].unit} 
             -> ${productData.value.detail[i].after_value}${productData.value.detail[i].unit}`);
                 } else {
-                    description.value.push(`${productData.value.detail[i].changed_point}의 양이 감소.`)
+                    description.value.push(`${productData.value.detail[i].changed_point} is decreased.`)
                 }
             }
         }) 
@@ -101,21 +101,21 @@ export default defineComponent({
                             if (res.data.uploader == getNameFromToken(token)) { // 업로더가 맞다면 삭제 처리
                                 axios.delete(process.env.VUE_APP_BACKEND_ADDRESS+'/product/'+this.productData?.product_id)
                                 .then(() => { 
-                                    alert("정상적으로 삭제되었습니다!");
+                                    alert("[Success] The product has successfully deleted!");
                                     this.$router.push('/finditem');
                                 })
-                                .catch(() => { alert("[에러] 삭제하는 도중 문제가 발생했습니다.") })
+                                .catch(() => { alert("[Error] The error caused during deleting the product.") })
                             } else {
-                                alert("[에러] 본인이 게시한 상품만 삭제할 수 있습니다.");
+                                alert("[Error] Only uploader can delete this product.");
                             }
                         })
-                        .catch(() => { alert("[에러] 상품 정보를 가져오는 데 실패했습니다.") })
+                        .catch(() => { alert("[Error] Failed to get data from server.") })
                 },
                 () => { //  만료 유저
-                    alert("[에러] 로그인이 만료되었습니다. 다시 로그인 후 시도해주세요.");
+                    alert("[Error] Login has expired. Please re-try after sign in.");
                 }, 
                 () => { // 비정상 유저
-                    alert("[에러] 로그인 후 이용해주세요.");
+                    alert("[Error] Please try after sign in.");
                 }
             )
         },
@@ -133,7 +133,7 @@ export default defineComponent({
                 userId: userId,
                 isPositive: rating})
                     .then((res) => {
-                        alert("평점이 반영됐습니다!");
+                        alert("[Success] Your rate is submitted!");
                         switch (res.data) { // UX를 위한 프론트단에서 사전 업데이트 처리
                             case "pos to neg":
                                 this.subPosValue();
@@ -151,13 +151,13 @@ export default defineComponent({
                                 break;
                         }
                     })
-                    .catch((e) => { alert("[에러] 평점 설정에 문제가 있습니다"); console.log(e); })
+                    .catch((e) => { alert("[Error] Error on submitting your rate."); console.log(e); })
             },
             () => { //  만료 유저
-                alert("[에러] 로그인이 만료되었습니다. 다시 로그인 후 시도해주세요.");
+                alert("[Error] Login has expired. Please re-try after sign in.");
             }, 
             () => { // 비정상 유저
-                    alert("[에러] 로그인 후 이용해주세요.");
+                    alert("[Error] Please try after sign in.");
             })
         },
         modify() {

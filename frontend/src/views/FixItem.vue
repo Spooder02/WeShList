@@ -1,41 +1,41 @@
 <template>
     <div class="w-4/5 bg-gray-50 m-auto p-2 shadow-lg text-center grid place-content-center">
-        <p class="font-semibold">상품 수정하기</p>
+        <p class="font-semibold">Modify Item</p>
         <label v-if="image_url === ''" for="file" class="p-8 m-auto border font-medium rounded-lg mt-4 mb-4">
         <span class="font-black">+</span>
-            이미지 등록
+            Add Image
         </label>
         <img v-if="image_url != ''" class="w-64 p-8 m-auto border rounded-lg mt-4 mb-4" :src="image_url">
-        <button v-if="image_url" @click="resetImage()" class="w-1/2 mb-2 p-0.5 m-auto rounded-lg bg-red-400 text-white font-medium shadow-xl">이미지 초기화</button>
+        <button v-if="image_url" @click="resetImage()" class="w-1/2 mb-2 p-0.5 m-auto rounded-lg bg-red-400 text-white font-medium shadow-xl">Reset Image</button>
         <input @change="uploadImage($event)" id="file" type="file" class="hidden" accept="image/*"/>
-        <input v-model="name" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="상품명">
-        <input v-model="brand" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="브랜드">
-        <input v-model="price" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="가격">
+        <input v-model="name" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="Product Name">
+        <input v-model="brand" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="Brand">
+        <input v-model="price" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="Price">
         <select v-model="category" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit">
-            <option :value="null" selected disabled>-- 카테고리 --</option>
+            <option :value="null" selected disabled>-- Category --</option>
             <option v-for="j in categories.length" :value="categories[j-1]">{{ categories[j-1] }}</option>
         </select>
         <div v-for="i in detail.length" class="border p-1 rounded-lg mb-2" :key="i">
             <p class="text-base text-gray-700 font-semibold flex justify-between mb-2">
-                상품 변화
+                Product change
             <div>
-                <button @click="removeChanges(i)" class="p-0.5 pl-1 pr-1 mr-2 rounded-lg bg-red-400 text-white font-medium shadow-xl"><span class="font-black ml-0.5">-</span> 변화 삭제</button>
-                <button @click="addChanges(i)" class="p-0.5 pl-1 pr-1 rounded-lg bg-green-400 text-white font-medium shadow-xl"><span class="font-black ml-0.5">+</span> 변화 추가</button>
+                <button @click="removeChanges(i)" class="p-0.5 pl-1 pr-1 mr-2 rounded-lg bg-red-400 text-white font-medium shadow-xl"><span class="font-black ml-0.5">-</span> Remove change</button>
+                <button @click="addChanges(i)" class="p-0.5 pl-1 pr-1 rounded-lg bg-green-400 text-white font-medium shadow-xl"><span class="font-black ml-0.5">+</span> Add change</button>
             </div>
             </p>
-            <input v-model="detail[i-1].changed_point" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="변화 항목">
-            <input v-model="detail[i-1].before_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="기존 용량(숫자 단위)" :disabled="unknown[i-1]">
+            <input v-model="detail[i-1].changed_point" type="text" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5 mb-3" placeholder="Changed Thing">
+            <input v-model="detail[i-1].before_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" placeholder="Previous Capacity(Number)" :disabled="unknown[i-1]">
             <select @input="setValue(i, 3, $event.target!.value)" v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 text-center p-0.5" :key="i" :disabled="unknown[i-1]">
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
             <p>↓</p>
-            <input v-model="detail[i-1].after_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="변화 용량(숫자 단위)" :disabled="unknown[i-1]">
+            <input v-model="detail[i-1].after_value" type="number" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" placeholder="Current Capacity(Number)" :disabled="unknown[i-1]">
             <select v-model="unit[i-1]" class="border rounded-lg border-gray-300 focus:border-blue-300 mb-2 text-center p-0.5" name="unit" disabled>
                 <option v-for="j in default_unit.length" :value="default_unit[j-1]">{{ default_unit[j-1] }}</option>
             </select>
-            <label class="block text-right mr-2 mb-0.5"><input type="checkbox" class="mr-1" v-model="unknown[i-1]">변경 양을 몰라요</label>
+            <label class="block text-right mr-2 mb-0.5"><input type="checkbox" class="mr-1" v-model="unknown[i-1]">I don't know the details</label>
         </div>
-        <button @click="addItem();" class="p-2 mt-2 mb-2 bg-blue-400 w-1/2 m-auto rounded-lg text-white font-semibold shadow-xl">+ 상품 수정하기</button>
+        <button @click="addItem();" class="p-2 mt-2 mb-2 bg-blue-400 w-1/2 m-auto rounded-lg text-white font-semibold shadow-xl">+ Modify Item</button>
     </div>
 </template>
 
@@ -56,9 +56,9 @@ export default defineComponent({
         return {
             changes: 1,
             default_unit: ['µg', 'mg', 'g', 'kg', 'mL', 'L', 'cc', '%'],
-            categories: ['과일', '견과/건과', '채소', '쌀/잡곡', '축산/계란', '수산물/건어물', '생수/음료',
-        '커피/원두/차', '과자/초콜릿/시리얼', '면/통조림/가공식품', '가루/조미료/오일', '장/소스/드레싱', '유제품/아이스크림',
-    '냉장/냉동/간편식품', '건강식품', '분유/어린이식품'],
+            categories: ['Fruits', 'Nuts', 'Vegetables', 'Grains', 'Meats', 'Fish', 'Still Water/Drinks',
+        'Crackers/Cereals', 'Chocolates', 'Canned Food', 'Oils/Seasoning', 'Sauces', 'Milk/Ice-cream',
+    'Frozen Foods', 'Health Foods', 'Kids'],
             unit: ['g'],
             detail: [] as Array<changed_value>,
             formData: new FormData(),
@@ -78,7 +78,7 @@ export default defineComponent({
                     break;
                 case 2:
                     if (isNaN(Number(value)))
-                        alert("숫자만 입력해주세요!");
+                        alert("Please enter the number.");
                     else {
                         this.detail[n-1].before_value = Number(value);
                     }
@@ -88,7 +88,7 @@ export default defineComponent({
                     break;
                 case 4:
                     if (isNaN(Number(value)))
-                        alert("숫자만 입력해주세요!");
+                        alert("Please enter the number.");
                     else
                         this.detail[n-1].after_value = Number(value);
             }
@@ -102,12 +102,12 @@ export default defineComponent({
             this.unit[i]='g';
             this.detail.push({changed_point: '', before_value: null, unit: 'g', after_value: null, unknown: false});
             } else {
-                alert("값을 모두 입력 후 추가해주세요!")
+                alert("[Error] Add more after fill out these information!")
             }
         },
         removeChanges(i:number) {
             if (this.detail.length <= 1) {
-                alert("[에러] 최소 1개 이상의 변화는 입력해야 합니다!");
+                alert("[Error] You must enter the changes more than one!");
             } else {
                 this.detail.splice(i-1, 1);
                 this.changes--;
@@ -156,11 +156,11 @@ export default defineComponent({
                             'Content-Type': 'multipart/form-data'
                         }})
                         .then(() => {
-                            alert("상품 수정이 완료되었습니다!");
+                            alert("[Success] Product Modify has completed!");
                             this.$router.push("/finditem");
                         })
                         .catch(() => {
-                            alert("[에러] 상품 수정에 실패했습니다!");
+                            alert("[Error] Failed on modifying the product!");
                         })
                     } else { // 기존 이미지 사용
                         this.formData.append("image_name", this.image_url.split('/')[5])
@@ -168,34 +168,29 @@ export default defineComponent({
                             'Content-Type': 'multipart/form-data'
                         }})
                         .then(() => {
-                            alert("상품 수정이 완료되었습니다!");
+                            alert("[Success] Product Modify has completed!");
                             this.$router.push("/finditem");
                         })
                         .catch(() => {
-                            alert("[에러] 상품 수정에 실패했습니다!");
+                            alert("[Error] Failed on modifying the product!");
                         })
                     }
                         
                 } else {
-                    alert("[에러] 상품 변화 값을 모두 입력해주세요!");
+                    alert("[Error] Please fill out all the changes!");
                 }
             } else {
-                alert("[에러] 상품 정보를 모두 입력해주세요!");
+                alert("[Error] Please fill out all the information about product!");
             }
         },
         resetImage() {
             this.image_url = '';
         },
-        setScore(caseNum: number) {
-            switch (caseNum) {
-                case 1: // Positive Score
-                    axios.post
-            }
-        }
+
     },
     async created() {
-        let response: product = (await axios.get<product>('http://localhost:8081/product/'+useRoute().query.id)).data;
-        this.image_url = response.image_name? process.env.VUE_APP_BACKEND_ADDRESS+"/static/image/"+response.image_name: '';
+        let response: product = (await axios.get<product>(process.env.VUE_APP_BACKEND_ADDRESS+'/product/'+useRoute().query.id)).data;
+        this.image_url = response.image_name? process.env.VUE_APP_STATIC_ADDRESS+response.image_name: '';
         this.name = response.name;
         this.brand = response.brand;
         this.price = Number(response.price);
