@@ -1,7 +1,7 @@
 <template>
-  <div class="">
+  <div>
     <img src="@/assets/main-banner.png" class="absolute z-0 blur-[1px]">
-    <div id="main-title" class="absolute text-center p-6 z-10">
+    <div id="main-title" class="relative text-center p-6 z-10">
       <h1 class="text-2xl font-bold text-white">We share shrinkflation</h1>
       <p class="mt-2 text-lg text-white">Let's share information about Shrinkflation!</p>
       <div class="mt-3 flex items-center justify-center gap-x-4">
@@ -10,10 +10,11 @@
       </div>
     </div>
   </div>
-  <div id="footer" class="bg-gray-100 absolute inset-x-0 bottom-0 text-center p-4">
-    <p class="">Developed by. Geonhui Jo (SCH Univ.)</p>
-    <p class="">Check out the code at 
-    <a class="underline" href="https://github.com/Spooder02/WeShList">GitHub!</a></p>
+  <div id="footer" class="bg-gray-100 absolute inset-x-0 bottom-0 text-center p-4 text-sm">
+    <p>Developed by. Geonhui Jo (SCH Univ.)</p>
+    <p>Contact : spooder02@kakao.com</p>
+    <p>Check out the code at 
+      <a class="underline" href="https://github.com/Spooder02/WeShList">GitHub!</a></p>
   </div>
 </template>
 

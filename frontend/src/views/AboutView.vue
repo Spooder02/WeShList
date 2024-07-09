@@ -1,30 +1,42 @@
 <template>
   <div class="about">
-    <p class="text-center font-bold text-2xl">서비스 소개</p>
-    <hr class="w-48 h-1 my-2 mx-auto bg-gray-200 border-0 rounded">
+    <p class="text-center font-bold text-2xl">Service Introduction</p>
+    <hr class="w-64 h-1 my-2 mx-auto bg-gray-200 border-0 rounded">
     <div class="w-4/5 mx-auto">
-      <p class="text-lg font-semibold">- 위시리스트(WeShList)는 어떤 서비스인가요?</p>
+      <p class="text-lg font-semibold">- What is WeShList?</p>
       <p>
-        슈링크플레이션 시대를 극복하기 위한 소비자 정보 공유 플랫폼으로,
-        어떠한 상품에 대해 정확한 변화를 파악하고 이를 근거로 현명한 소비를 돕기 위해 제작하였습니다.
+        To overcome shrinkflation, We made a web service which can share Shrinkflation information.
+        It can let you know how it changed and helps you smart comsumption based on this service.
       </p>
     </div>
-    <p class="text-center font-bold text-2xl mt-8">사용 방법</p>
+    <p class="text-center font-bold text-2xl mt-8">How to use?</p>
     <hr class="w-48 h-1 my-2 mx-auto bg-gray-200 border-0 rounded">
     <div class="w-4/5 mx-auto my-6">
       <div class="block">
-        <img src="@/assets/weshlist_howtouse(1).png">
-        <div class="block">
-          <p class="font-semibold text-md">1. 메인 페이지 - 햄버거 박스를 이용해 다른 영역으로 이동이 가능합니다.</p>
-          <p class="text-sm">로그인 영역 - 회원가입 및 로그인을 할 수 있습니다.</p>
-          <p class="text-sm">메인 - 메인 페이지로 이동할 수 있습니다</p>
-          <p class="text-sm">소개 - 서비스 소개 및 사용 방법을 확인할 수 있습니다.</p>
-          <p class="text-sm">상품 찾기 - 사용자들이 등록한 상품들을 확인할 수 있습니다.</p>
-          <p class="text-sm">상품 제보 - 직접 사용자가 상품에 대한 정보를 게시할 수 있습니다.</p>
+        <p class="font-semibold text-md">1. Mainpage</p>
+        <img src="@/assets/WeShList_MainPage_Introduction.png">
+        <div class="block text-sm">
+          <p class="text-sm">There's two way to approach another page.</p>
+          <p class="font-semibold pt-1">First, Click Hamburger menu to Open Menupage.</p>
+          <li>Home - Back to this mainpage</li>
+          <li>Introduction - You are here. Can see how to use WeShList</li>
+          <li>Report Product - You can report a Shrinkflation product. People can see your report.</li>
+          <li>Find Product - You can see Shrinkflation products in this page.</li>
         </div>
-        <img class="mt-6" src="@/assets/weshlist_howtouse(2).png">
-        <p class="font-semibold text-md">2. 상품 등록 페이지 - 첨부된 사진을 참고하여 상품을 등록합니다.</p>
-        <p class="text-sm">상품 수정 페이지도 동일한 UI를 사용하며, 상품 등록과 마찬가지로 수정할 수 있습니다.</p>
+        <p class="font-semibold text-md pt-4">2. Report Product</p>
+        <img src="@/assets/WeShList_ReportProduct_Introduction.png">
+        <p class="text-sm">You can post a shrinkflation production with this form. Fill out the form to share shrinkflation information to people!</p>
+        <p class="text-sm font-semibold p-1 bg-slate-100 rounded-md m-1">
+          ! Details must be filled more than one <br>
+          ! Image is additional option.
+        </p>
+        <p class="text-sm">* Modifying Information uses same UI.</p>
+        <p class="font-semibold text-md pt-4">3. Find Product</p>
+        <img src="@/assets/WeShList_FindProduct_Introduction.png">
+        <p class="text-sm">
+          You can see Shrinkflation products on this page, You can click on the product card to see more information.<br>
+          When the infromation is wrong, you can rate this information with clicking a rating button or modify the information!
+        </p>
       </div>
       
     </div>
