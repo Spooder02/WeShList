@@ -32,6 +32,20 @@ public class FileService {
                 e.printStackTrace();
             }
         }
+
         return ResponseEntity.ok("image uploaded");
+    }
+
+    public ResponseEntity<String> deleteImage(String fileName) {
+        try {
+            boolean isFileExist = amazonS3Client.doesObjectExist(bucket, fileName);
+            if (isFileExist) {
+                amazonS3Client.deleteObject(bucket, fileName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok("Image Deleted");
     }
 }

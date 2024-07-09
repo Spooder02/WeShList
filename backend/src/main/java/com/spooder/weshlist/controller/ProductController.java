@@ -122,6 +122,9 @@ public class ProductController {
     @DeleteMapping("/{product_id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long product_id) {
         try {
+            fileService.deleteImage(
+                productService.getProductById(product_id).getImage_name()
+            );
             productService.deleteProduct(product_id);
             return new ResponseEntity<>("Deleted", HttpStatus.OK);
         } catch(Exception e) {
