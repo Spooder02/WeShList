@@ -2,6 +2,8 @@ package com.spooder.weshlist.service;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +15,9 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 
 @Service
 public class FileService {
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+
     @Autowired
     private AmazonS3Client amazonS3Client;
 
@@ -41,6 +45,7 @@ public class FileService {
             boolean isFileExist = amazonS3Client.doesObjectExist(bucket, fileName);
             if (isFileExist) {
                 amazonS3Client.deleteObject(bucket, fileName);
+                logger.info("Excuted!");
             }
         } catch (Exception e) {
             e.printStackTrace();

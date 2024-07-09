@@ -77,9 +77,6 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) throws IOException {
-        Product product = getProductById(id);
-        Path filePath = Paths.get(imageDirectory + product.getImage_name());
-        Files.delete(filePath);
         productRepository.deleteById(id);
     }
 

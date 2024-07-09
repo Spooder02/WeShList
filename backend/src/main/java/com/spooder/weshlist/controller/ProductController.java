@@ -121,13 +121,13 @@ public class ProductController {
 
     @DeleteMapping("/{product_id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long product_id) {
+        String fileName = productService.getProductById(product_id).getImage_name();
         try {
-            fileService.deleteImage(
-                productService.getProductById(product_id).getImage_name()
-            );
+            fileService.deleteImage(fileName);
             productService.deleteProduct(product_id);
             return new ResponseEntity<>("Deleted", HttpStatus.OK);
         } catch(Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>("Error on deleting image", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
