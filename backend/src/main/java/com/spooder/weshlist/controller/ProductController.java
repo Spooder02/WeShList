@@ -85,10 +85,10 @@ public class ProductController {
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
-        if (updatedProduct.getUploader() == null)
-            product.setUploader("익명");
+        if (updatedProduct.getUpdator() == null)
+            product.setUpdator("익명");
         else
-            product.setUploader(updatedProduct.getUploader());
+            product.setUpdator(updatedProduct.getUpdator());
 
         replaceImage(product, imageFile); // 이미지 없으면 알아서 걸러주므로, 일단 보내기
 
@@ -96,15 +96,13 @@ public class ProductController {
         product.setPrice(updatedProduct.getPrice());
         product.setBrand(updatedProduct.getBrand());
         product.setCategory(updatedProduct.getCategory());
-        
         product.setUploaded_date(product.getUploaded_date());
-        product.setUpdator(updatedProduct.getUpdator());
         product.setUpdated_date(now);
 
         List<ProductDetail> updatedDetails = updatedProduct.getDetail();
         for (ProductDetail updatedDetail : updatedDetails) {
             ProductDetail existingDetail = productService.getProductDetailByChangedPoint(updatedDetail.getChanged_point(), product);
-            if (existingDetail == null) { // 존재하지 않는 속성이면 추가
+            if (existingDetail == null) { // 존재하지 않는 속성이면 추가 + 이후 로직 수정 필요
                 updatedDetail.setProduct(product);
                 product.getDetail().add(updatedDetail);
             } else { // 아니라면 값 수정

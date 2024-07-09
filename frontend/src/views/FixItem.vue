@@ -45,6 +45,7 @@ import '../index.css'
 import { changed_value, product, productDetail } from '../datatype'
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { getNameFromToken } from '@/auth';
 import appendOrReplaceFormData from '@/function';
 
 export default defineComponent({
@@ -146,6 +147,10 @@ export default defineComponent({
                             appendOrReplaceFormData(this.formData, `detail[${i}].unit`, this.detail[i].unit ?? '')
                         }
                     }
+                    const token = this.$cookies.get("Token");
+                    console.log(token)
+                    if (token != null)
+                        appendOrReplaceFormData(this.formData, 'updator', getNameFromToken(token))
                     appendOrReplaceFormData(this.formData, 'name', this.name);
                     appendOrReplaceFormData(this.formData, 'price', this.price.toString());
                     appendOrReplaceFormData(this.formData, 'brand', this.brand);
