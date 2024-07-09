@@ -42,7 +42,7 @@ export default defineComponent({
                         window.location.reload();
                     });
                 })
-                .catch(e => { alert("로그인에 실패했습니다!") })
+                .catch(e => { alert("Failed to login!") })
             }
         }
     }

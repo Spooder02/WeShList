@@ -98,22 +98,22 @@ export default defineComponent({
                     case 1:
                         if (data.id.length >= 8) i++;
                         else {
-                            alert("아이디는 최소 8자 이상으로 설정해주세요!");
+                            alert("ID must be longer than 8 letters!");
                             break;
                         }
                         if (regex.test(data.email)) i++;
                         else {
-                            alert("유효하지 않은 이메일 형식입니다.");
+                            alert("Invalid Email Expression.");
                             break;
                         }
                         if (data.password === data.repeat_password) i++;
                         else {
-                            alert("비밀번호가 서로 다릅니다. 다시 입력해주세요.");
+                            alert("Repeat Password doesn't match. Try again.");
                             break;
                         }
                         if (data.password.length >= 8) i++;
                         else {
-                            alert("비밀번호는 최소 8자 이상으로 설정해주세요!");
+                            alert("Password must be longer than 8 letters!");
                             break;
                         }
                         case 5:
@@ -126,11 +126,11 @@ export default defineComponent({
                                 "tel": data.tel
                             })
                             .then(res => {
-                                alert("회원가입 성공");
+                                alert("Sign up has successfully completed!");
                                 this.$router.push("/")
                             })
                             .catch(res => {
-                                alert("에러 발생");
+                                alert("Error on signing up. Check your form!");
                     })
                         
                 }
