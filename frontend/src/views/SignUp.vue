@@ -67,11 +67,11 @@ export default defineComponent({
             }, 100);
         },
         verifyTel() {
-            if (this.signupData.tel === undefined) alert("전화번호를 입력하세요!")
+            if (this.signupData.tel === undefined) alert("Please input your telephone number!")
             else if (/^[0]{1}[1]{1}[0]{1}-[0-9]{4}-[0-9]{4}$/.test(this.signupData.tel.toString())) {
-                alert("확인되었습니다!");
+                alert("Validated!");
                 this.isVerified = true;
-            } else { alert("올바른 전화번호를 입력하세요!"); }
+            } else { alert("Please input valid Telephone number!"); }
         },
         formatPhoneNumber() {
             const phoneNumber = this.signupData.tel.replace(/\D/g, "");
