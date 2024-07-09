@@ -102,7 +102,7 @@ public class ProductController {
         List<ProductDetail> updatedDetails = updatedProduct.getDetail();
         for (ProductDetail updatedDetail : updatedDetails) {
             ProductDetail existingDetail = productService.getProductDetailByChangedPoint(updatedDetail.getChanged_point(), product);
-            if (existingDetail == null) { // 존재하지 않는 속성이면 추가 + 이후 로직 수정 필요
+            if (existingDetail == null) { // 존재하지 않는 속성이면 추가 + 이후 중복 관련 로직 수정 필요
                 updatedDetail.setProduct(product);
                 product.getDetail().add(updatedDetail);
             } else { // 아니라면 값 수정

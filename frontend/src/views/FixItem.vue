@@ -148,7 +148,6 @@ export default defineComponent({
                         }
                     }
                     const token = this.$cookies.get("Token");
-                    console.log(token)
                     if (token != null)
                         appendOrReplaceFormData(this.formData, 'updator', getNameFromToken(token))
                     appendOrReplaceFormData(this.formData, 'name', this.name);
